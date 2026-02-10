@@ -29,11 +29,18 @@ router.post('/login', (req, res) => {
     };
 
     res.redirect(user.role === 'admin' ? '/admin' : '/employee');
+
+    if (user.is_active === 0) {
+        return res.render('auth/login', {
+            error: 'Compte désactivé'
+        });
+    }
 });
 
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/login');
 });
+
 
 module.exports = router;

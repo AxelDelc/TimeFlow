@@ -3,6 +3,7 @@ const session = require('express-session');
 const path = require('path');
 const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
+const employeeRoutes = require('./routes/employee.routes');
 
 const app = express();
 
@@ -23,8 +24,14 @@ app.use(
     })
 );
 
+// Route auth
 app.use(authRoutes);
+
+//Routes admin
 app.use('/admin', adminRoutes);
+
+//Routes employées
+app.use('/employee', employeeRoutes);
 
 // routes
 app.get('/', (req, res) => {

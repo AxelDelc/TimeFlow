@@ -1,0 +1,33 @@
+<h2>Salariés</h2>
+
+<a href="/admin/employees/new">➕ Ajouter un salarié</a>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Statut</th>
+        <th>Action</th>
+    </tr>
+
+    <% employees.forEach(emp=> { %>
+        <tr>
+            <td>
+                <%= emp.name %>
+            </td>
+            <td>
+                <%= emp.email %>
+            </td>
+            <td>
+                <%= emp.is_active ? 'Actif' : 'Désactivé' %>
+            </td>
+            <td>
+                <% if (emp.is_active) { %>
+                    <form method="POST" action="/admin/employees/<%= emp.id %>/disable">
+                        <button>Désactiver</button>
+                    </form>
+                    <% } %>
+            </td>
+        </tr>
+        <% }) %>
+</table>
