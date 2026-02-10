@@ -1,6 +1,8 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+const authRoutes = require('./routes/auth.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 const app = express();
 
@@ -20,6 +22,9 @@ app.use(
         saveUninitialized: false
     })
 );
+
+app.use(authRoutes);
+app.use('/admin', adminRoutes);
 
 // routes
 app.get('/', (req, res) => {

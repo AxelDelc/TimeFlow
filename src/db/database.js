@@ -4,3 +4,4 @@ const path = require('path');
 const db = new Database(path.join(__dirname, 'database.sqlite'));
 
 module.exports = db;
+
