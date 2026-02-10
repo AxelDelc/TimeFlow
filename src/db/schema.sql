@@ -6,3 +6,13 @@ CREATE TABLE IF NOT EXISTS users (
   role TEXT CHECK(role IN ('admin', 'employee')) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS work_sessions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  start_time DATETIME NOT NULL,
+  end_time DATETIME,
+  duration INTEGER,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+

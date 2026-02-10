@@ -1,0 +1,33 @@
+<h1>Tableau de bord</h1>
+
+<form method="POST" action="/employee/start">
+    <button>🟢 Pointer entrée</button>
+</form>
+
+<form method="POST" action="/employee/end">
+    <button>🔴 Pointer sortie</button>
+</form>
+
+<h2>Mes heures</h2>
+
+<table>
+    <tr>
+        <th>Début</th>
+        <th>Fin</th>
+        <th>Durée (min)</th>
+    </tr>
+
+    <% sessions.forEach(s=> { %>
+        <tr>
+            <td>
+                <%= s.start_time %>
+            </td>
+            <td>
+                <%= s.end_time || '-' %>
+            </td>
+            <td>
+                <%= s.duration || '-' %>
+            </td>
+        </tr>
+        <% }) %>
+</table>
