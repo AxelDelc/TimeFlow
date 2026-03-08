@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      # Monte directement le dossier local — Docker utilise la BDD existante
+      - ./src/db:/app/src/db
+    restart: unless-stopped
