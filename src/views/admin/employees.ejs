@@ -26,14 +26,14 @@
                 <% employees.forEach(emp => { %>
                     <tr>
                         <td>
-                            <div style="display:flex;align-items:center;gap:9px;">
-                                <div class="user-avatar" style="background:#334155;color:#cbd5e1;">
+                            <div class="employee-cell">
+                                <div class="user-avatar avatar-dark">
                                     <%= emp.name.charAt(0).toUpperCase() %>
                                 </div>
                                 <strong><%= emp.name %></strong>
                             </div>
                         </td>
-                        <td style="color:#64748b;"><%= emp.email %></td>
+                        <td class="text-muted"><%= emp.email %></td>
                         <td>
                             <% if (emp.is_active) { %>
                                 <span class="badge badge-green"><span class="badge-dot"></span>Actif</span>
@@ -46,11 +46,11 @@
                         </td>
                         <td>
                             <% if (emp.is_active) { %>
-                                <form method="POST" action="/admin/employees/<%= emp.id %>/disable" style="display:inline;">
+                                <form method="POST" action="/admin/employees/<%= emp.id %>/disable" class="form-inline">
                                     <button class="btn btn-danger btn-sm">Désactiver</button>
                                 </form>
                             <% } else { %>
-                                <form method="POST" action="/admin/employees/<%= emp.id %>/enable" style="display:inline;">
+                                <form method="POST" action="/admin/employees/<%= emp.id %>/enable" class="form-inline">
                                     <button class="btn btn-success btn-sm">Réactiver</button>
                                 </form>
                             <% } %>

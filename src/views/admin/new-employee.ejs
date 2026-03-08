@@ -1,6 +1,6 @@
 <%- include('../layout/header', { pageTitle: 'Nouveau salarié', currentPage: 'employees', user: user }) %>
 
-<div class="card" style="max-width:480px;">
+<div class="card card--narrow">
     <div class="card-header">
         <span class="card-title">Créer un compte salarié</span>
     </div>
@@ -23,7 +23,7 @@
                 <label for="password">Mot de passe</label>
                 <input id="password" name="password" type="password" placeholder="••••••••" required />
             </div>
-            <div class="form-footer" style="display:flex;gap:10px;">
+            <div class="form-footer">
                 <button type="submit" class="btn btn-primary">Créer le compte</button>
                 <a href="/admin/employees" class="btn btn-ghost">Annuler</a>
             </div>

@@ -1,22 +1,22 @@
 <%- include('../layout/header', { pageTitle: 'Pointages — ' + employee.name, currentPage: 'employees', user: user }) %>
 
-<div style="margin-bottom:16px;">
+<div class="mb-4">
     <a href="/admin/employees" class="btn btn-ghost btn-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><polyline points="15 18 9 12 15 6"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
         Retour aux salariés
     </a>
 </div>
 
-<div class="card" style="margin-bottom:16px;padding:0;">
-    <div class="card-body" style="display:flex;align-items:center;gap:14px;">
-        <div class="user-avatar" style="background:#1e40af;color:#bfdbfe;width:44px;height:44px;font-size:16px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+<div class="card card--mb">
+    <div class="card-body profile-header">
+        <div class="user-avatar avatar-blue avatar-lg">
             <%= employee.name.charAt(0).toUpperCase() %>
         </div>
         <div>
-            <div style="font-weight:600;font-size:15px;color:#0f172a;"><%= employee.name %></div>
-            <div style="font-size:12.5px;color:#64748b;"><%= employee.email %></div>
+            <div class="profile-name"><%= employee.name %></div>
+            <div class="profile-email"><%= employee.email %></div>
         </div>
-        <div style="margin-left:auto;">
+        <div class="ml-auto">
             <% if (employee.is_active) { %>
                 <span class="badge badge-green"><span class="badge-dot"></span>Actif</span>
             <% } else { %>
@@ -47,7 +47,7 @@
                 <% } %>
                 <% sessions.forEach((s, i) => { %>
                     <tr>
-                        <td style="color:#94a3b8;">#<%= s.id %></td>
+                        <td class="text-subtle">#<%= s.id %></td>
                         <td><%= s.start_time %></td>
                         <td><%= s.end_time || '—' %></td>
                         <td>

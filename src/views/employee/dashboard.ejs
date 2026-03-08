@@ -1,6 +1,6 @@
 <%- include('../layout/header', { pageTitle: 'Mon espace', currentPage: 'dashboard', user: user }) %>
 
-<div class="punch-grid" style="max-width:480px;">
+<div class="punch-grid punch-wrapper">
     <form method="POST" action="/employee/start">
         <button class="punch-btn punch-in">Pointer entrée</button>
     </form>
@@ -9,7 +9,7 @@
     </form>
 </div>
 
-<div class="card" style="max-width:700px;">
+<div class="card sessions-card">
     <div class="card-header">
         <span class="card-title">Mes pointages</span>
     </div>

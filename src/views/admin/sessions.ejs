@@ -22,8 +22,8 @@
                 <% sessions.forEach(s => { %>
                     <tr>
                         <td>
-                            <div style="display:flex;align-items:center;gap:9px;">
-                                <div class="user-avatar" style="background:#334155;color:#cbd5e1;width:28px;height:28px;font-size:11px;">
+                            <div class="employee-cell">
+                                <div class="user-avatar avatar-dark avatar-sm">
                                     <%= s.employee_name.charAt(0).toUpperCase() %>
                                 </div>
                                 <span><%= s.employee_name %></span>

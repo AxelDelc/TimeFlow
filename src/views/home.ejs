@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeFlow — Gestion du pointage pour PME</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="home-nav">
+    <div class="home-nav-brand">
+        <div class="home-nav-logo">TF</div>
+        <span class="home-nav-name">TimeFlow</span>
+    </div>
+    <a href="/login" class="hero-btn-primary">Se connecter</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-tag">
+        <span class="hero-tag-dot"></span>
+        Gestion du pointage pour PME
+    </div>
+    <h1 class="hero-title">
+        Le pointage de votre équipe,<br><span>simplifié</span>
+    </h1>
+    <p class="hero-subtitle">
+        TimeFlow permet à vos salariés de pointer leurs entrées et sorties en un clic, et à l'administrateur de suivre les présences en temps réel.
+    </p>
+    <div class="hero-actions">
+        <a href="/login" class="hero-btn-primary">
+            Accéder à l'application
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+    </div>
+</section>
+
+<!-- Fonctionnalités -->
+<section class="features">
+    <div class="features-header">
+        <div class="features-label">Fonctionnalités</div>
+        <h2 class="features-title">Tout ce dont vous avez besoin</h2>
+        <p class="features-subtitle">Une application légère, rapide et pensée pour les petites structures.</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <div class="feature-title">Pointage en un clic</div>
+            <div class="feature-desc">Les salariés pointent leur entrée et leur sortie depuis leur espace personnel. Simple et rapide.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon blue">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div class="feature-title">Présences en temps réel</div>
+            <div class="feature-desc">Le tableau de bord admin affiche en temps réel qui est présent, avec l'heure d'arrivée.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon purple">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="feature-title">Gestion des équipes</div>
+            <div class="feature-desc">Créez, désactivez et réactivez les comptes salariés directement depuis l'interface admin.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon orange">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="feature-title">Historique des pointages</div>
+            <div class="feature-desc">Consultez l'historique complet par salarié ou pour toute l'équipe, trié du plus récent.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div class="feature-title">Accès sécurisé</div>
+            <div class="feature-desc">Authentification par email et mot de passe, rôles distincts admin et salarié, comptes désactivables.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon blue">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <div class="feature-title">Données locales</div>
+            <div class="feature-desc">Base SQLite embarquée, aucune dépendance externe, déployable sur n'importe quel serveur avec Docker.</div>
+        </div>
+    </div>
+</section>
+
+<!-- Rôles -->
+<section class="roles">
+    <div class="roles-header">
+        <div class="features-label">Deux espaces distincts</div>
+        <h2 class="features-title">Pensé pour chaque profil</h2>
+    </div>
+    <div class="roles-grid">
+        <div class="role-card admin">
+            <div class="role-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <div class="role-title">Administrateur</div>
+            <div class="role-desc">Vue complète sur les présences et la gestion de l'équipe.</div>
+            <ul class="role-list">
+                <li>
+                    <span class="role-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Tableau de bord avec stats en temps réel
+                </li>
+                <li>
+                    <span class="role-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Créer et gérer les comptes salariés
+                </li>
+                <li>
+                    <span class="role-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Consulter tous les pointages
+                </li>
+                <li>
+                    <span class="role-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Désactiver / réactiver un compte
+                </li>
+            </ul>
+        </div>
+        <div class="role-card employee">
+            <div class="role-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="role-title">Salarié</div>
+            <div class="role-desc">Un espace personnel simple pour gérer ses pointages.</div>
+            <ul class="role-list">
+                <li>
+                    <span class="role-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Pointer son entrée en un clic
+                </li>
+                <li>
+                    <span class="role-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Pointer sa sortie en un clic
+                </li>
+                <li>
+                    <span class="role-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Consulter son historique de pointages
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- CTA finale -->
+<section class="cta-section">
+    <h2 class="cta-title">Prêt à démarrer ?</h2>
+    <p class="cta-sub">Connectez-vous et commencez à suivre vos présences dès maintenant.</p>
+    <a href="/login" class="hero-btn-primary">
+        Accéder à TimeFlow
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+</section>
+
+<!-- Footer -->
+<footer class="home-footer">
+    <div class="footer-brand">
+        <div class="home-nav-logo home-nav-logo--sm">TF</div>
+        TimeFlow
+    </div>
+    <div class="footer-copy">Application de pointage pour PME</div>
+</footer>
+
+</body>
+</html>

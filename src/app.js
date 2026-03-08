@@ -33,9 +33,8 @@ app.use('/admin', adminRoutes);
 //Routes employées
 app.use('/employee', employeeRoutes);
 
-// routes
 app.get('/', (req, res) => {
-    res.send('Test TimeFlow OK');
+    res.render('home');
 });
 
 module.exports = app;
