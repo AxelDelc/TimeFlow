@@ -1,0 +1,115 @@
+<%- include('../layout/header', { pageTitle: 'Tableau de bord', currentPage: 'dashboard', user: user }) %>
+
+<!-- Stats -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon blue">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value"><%= stats.totalEmployees %></div>
+            <div class="stat-label">Salariés total</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon green">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value"><%= stats.activeEmployees %></div>
+            <div class="stat-label">Comptes actifs</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon orange">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value"><%= stats.sessionsToday %></div>
+            <div class="stat-label">Pointages aujourd'hui</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon purple">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value"><%= stats.currentlyIn %></div>
+            <div class="stat-label">Présents maintenant</div>
+        </div>
+    </div>
+</div>
+
+<!-- Grid principal -->
+<div class="dashboard-grid">
+
+    <!-- Activité récente -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">Activité récente</span>
+            <a href="/admin/sessions" class="btn btn-ghost btn-sm">Voir tout</a>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Salarié</th>
+                        <th>Entrée</th>
+                        <th>Sortie</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (recentSessions.length === 0) { %>
+                        <tr><td colspan="4" class="empty-state">Aucun pointage enregistré</td></tr>
+                    <% } %>
+                    <% recentSessions.forEach(s => { %>
+                        <tr>
+                            <td><strong><%= s.employee_name %></strong></td>
+                            <td><%= s.start_time %></td>
+                            <td><%= s.end_time || '—' %></td>
+                            <td>
+                                <% if (!s.end_time) { %>
+                                    <span class="badge badge-green"><span class="badge-dot"></span>En cours</span>
+                                <% } else { %>
+                                    <span class="badge badge-gray">Terminé</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Présents maintenant -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">Présents maintenant</span>
+            <span class="badge badge-green"><%= activeNow.length %> actif<%= activeNow.length > 1 ? 's' : '' %></span>
+        </div>
+        <div class="card-body">
+            <% if (activeNow.length === 0) { %>
+                <div class="empty-state">Personne de présent</div>
+            <% } else { %>
+                <div class="active-list">
+                    <% activeNow.forEach(a => { %>
+                        <div class="active-item">
+                            <div class="active-avatar"><%= a.name.charAt(0).toUpperCase() %></div>
+                            <div>
+                                <div class="active-name"><%= a.name %></div>
+                                <div class="active-since">depuis <%= a.start_time %></div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+</div>
+
+<%- include('../layout/footer') %>

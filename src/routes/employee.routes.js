@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', requireAuth, async (req, res) => {
     const sessions = await WorkSession.getUserSessions(req.session.user.id);
-    res.render('employee/dashboard', { sessions });
+    res.render('employee/dashboard', { sessions, user: req.session.user });
 });
 
 router.post('/start', requireAuth, async (req, res) => {

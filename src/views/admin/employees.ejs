@@ -1,33 +1,65 @@
-<h2>Salariés</h2>
+<%- include('../layout/header', { pageTitle: 'Salariés', currentPage: 'employees', user: user }) %>
 
-<a href="/admin/employees/new">➕ Ajouter un salarié</a>
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">Liste des salariés</span>
+        <a href="/admin/employees/new" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Ajouter un salarié
+        </a>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Statut</th>
+                    <th>Pointages</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (employees.length === 0) { %>
+                    <tr><td colspan="5" class="empty-state">Aucun salarié enregistré</td></tr>
+                <% } %>
+                <% employees.forEach(emp => { %>
+                    <tr>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:9px;">
+                                <div class="user-avatar" style="background:#334155;color:#cbd5e1;">
+                                    <%= emp.name.charAt(0).toUpperCase() %>
+                                </div>
+                                <strong><%= emp.name %></strong>
+                            </div>
+                        </td>
+                        <td style="color:#64748b;"><%= emp.email %></td>
+                        <td>
+                            <% if (emp.is_active) { %>
+                                <span class="badge badge-green"><span class="badge-dot"></span>Actif</span>
+                            <% } else { %>
+                                <span class="badge badge-red">Désactivé</span>
+                            <% } %>
+                        </td>
+                        <td>
+                            <a href="/admin/employees/<%= emp.id %>/sessions" class="btn btn-ghost btn-sm">Voir pointages</a>
+                        </td>
+                        <td>
+                            <% if (emp.is_active) { %>
+                                <form method="POST" action="/admin/employees/<%= emp.id %>/disable" style="display:inline;">
+                                    <button class="btn btn-danger btn-sm">Désactiver</button>
+                                </form>
+                            <% } else { %>
+                                <form method="POST" action="/admin/employees/<%= emp.id %>/enable" style="display:inline;">
+                                    <button class="btn btn-success btn-sm">Réactiver</button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<table border="1" cellpadding="5">
-    <tr>
-        <th>Nom</th>
-        <th>Email</th>
-        <th>Statut</th>
-        <th>Action</th>
-    </tr>
-
-    <% employees.forEach(emp=> { %>
-        <tr>
-            <td>
-                <%= emp.name %>
-            </td>
-            <td>
-                <%= emp.email %>
-            </td>
-            <td>
-                <%= emp.is_active ? 'Actif' : 'Désactivé' %>
-            </td>
-            <td>
-                <% if (emp.is_active) { %>
-                    <form method="POST" action="/admin/employees/<%= emp.id %>/disable">
-                        <button>Désactiver</button>
-                    </form>
-                    <% } %>
-            </td>
-        </tr>
-        <% }) %>
-</table>
+<%- include('../layout/footer') %>

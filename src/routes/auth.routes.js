@@ -13,12 +13,12 @@ router.post('/login', (req, res) => {
     const { email, password } = req.body;
     const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
 
-    if (user.is_active === 0) {
-        return res.render('auth/login', { error: 'Compte désactivé' });
-    }
-
     if (!user) {
         return res.render('auth/login', { error: 'Utilisateur non trouvé' });
+    }
+
+    if (user.is_active === 0) {
+        return res.render('auth/login', { error: 'Compte désactivé' });
     }
 
     const valid = bcrypt.compareSync(password, user.password_hash);
