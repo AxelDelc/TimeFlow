@@ -68,11 +68,11 @@
                     <% } %>
                     <% recentSessions.forEach(s => { %>
                         <tr>
-                            <td><strong><%= s.employee_name %></strong></td>
-                            <td><%= s.start_time %></td>
-                            <td><%= s.end_time || '—' %></td>
+                            <td><strong><%= s.user.name %></strong></td>
+                            <td><%= s.startTime %></td>
+                            <td><%= s.endTime || '—' %></td>
                             <td>
-                                <% if (!s.end_time) { %>
+                                <% if (!s.endTime) { %>
                                     <span class="badge badge-green"><span class="badge-dot"></span>En cours</span>
                                 <% } else { %>
                                     <span class="badge badge-gray">Terminé</span>
@@ -98,10 +98,10 @@
                 <div class="active-list">
                     <% activeNow.forEach(a => { %>
                         <div class="active-item">
-                            <div class="active-avatar"><%= a.name.charAt(0).toUpperCase() %></div>
+                            <div class="active-avatar"><%= a.user.name.charAt(0).toUpperCase() %></div>
                             <div>
-                                <div class="active-name"><%= a.name %></div>
-                                <div class="active-since">depuis <%= a.start_time %></div>
+                                <div class="active-name"><%= a.user.name %></div>
+                                <div class="active-since">depuis <%= a.startTime %></div>
                             </div>
                         </div>
                     <% }) %>

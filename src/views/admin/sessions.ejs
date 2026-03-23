@@ -24,15 +24,15 @@
                         <td>
                             <div class="employee-cell">
                                 <div class="user-avatar avatar-dark avatar-sm">
-                                    <%= s.employee_name.charAt(0).toUpperCase() %>
+                                    <%= s.user.name.charAt(0).toUpperCase() %>
                                 </div>
-                                <span><%= s.employee_name %></span>
+                                <span><%= s.user.name %></span>
                             </div>
                         </td>
-                        <td><%= s.start_time %></td>
-                        <td><%= s.end_time || '—' %></td>
+                        <td><%= s.startTime %></td>
+                        <td><%= s.endTime || '—' %></td>
                         <td>
-                            <% if (!s.end_time) { %>
+                            <% if (!s.endTime) { %>
                                 <span class="badge badge-green"><span class="badge-dot"></span>En cours</span>
                             <% } else { %>
                                 <span class="badge badge-gray">Terminé</span>

@@ -28,10 +28,10 @@
                 <% } %>
                 <% sessions.forEach(s => { %>
                     <tr>
-                        <td><%= s.start_time %></td>
-                        <td><%= s.end_time || '—' %></td>
+                        <td><%= s.startTime %></td>
+                        <td><%= s.endTime || '—' %></td>
                         <td>
-                            <% if (!s.end_time) { %>
+                            <% if (!s.endTime) { %>
                                 <span class="badge badge-green"><span class="badge-dot"></span>En cours</span>
                             <% } else { %>
                                 <span class="badge badge-gray">Terminé</span>

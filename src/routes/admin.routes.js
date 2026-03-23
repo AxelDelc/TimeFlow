@@ -64,16 +64,20 @@ router.post('/employees/new', requireAdmin, async (req, res) => {
 
     try {
         // create() : insère une nouvelle ligne — lève une erreur si l'email est déjà pris (contrainte unique)
+        // create() : insère une nouvelle ligne — lève une erreur si l'email est déjà pris (contrainte unique)
         await prisma.user.create({
             data: { name, email, passwordHash: hash, role: 'employee' },
         });
 
         res.redirect('/admin/employees');
-    } catch {
-        res.render('admin/new-employee', {
-            user: req.session.user,
-            error: 'Cette adresse email est déjà utilisée.'
-        });
+    } catch (err) {
+        // P2002 = violation de contrainte unique (email déjà utilisé)
+        const error = err.code === 'P2002'
+            ? 'Cette adresse email est déjà utilisée.'
+            : `Erreur lors de la création : ${err.message}`;
+
+        console.error('Erreur création employé:', err);
+        res.render('admin/new-employee', { user: req.session.user, error });
     }
 });
 

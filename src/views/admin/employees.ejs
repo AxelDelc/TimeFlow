@@ -35,7 +35,7 @@
                         </td>
                         <td class="text-muted"><%= emp.email %></td>
                         <td>
-                            <% if (emp.is_active) { %>
+                            <% if (emp.isActive) { %>
                                 <span class="badge badge-green"><span class="badge-dot"></span>Actif</span>
                             <% } else { %>
                                 <span class="badge badge-red">Désactivé</span>
@@ -45,7 +45,7 @@
                             <a href="/admin/employees/<%= emp.id %>/sessions" class="btn btn-ghost btn-sm">Voir pointages</a>
                         </td>
                         <td>
-                            <% if (emp.is_active) { %>
+                            <% if (emp.isActive) { %>
                                 <form method="POST" action="/admin/employees/<%= emp.id %>/disable" class="form-inline">
                                     <button class="btn btn-danger btn-sm">Désactiver</button>
                                 </form>

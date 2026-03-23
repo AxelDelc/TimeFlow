@@ -17,7 +17,7 @@
             <div class="profile-email"><%= employee.email %></div>
         </div>
         <div class="ml-auto">
-            <% if (employee.is_active) { %>
+            <% if (employee.isActive) { %>
                 <span class="badge badge-green"><span class="badge-dot"></span>Actif</span>
             <% } else { %>
                 <span class="badge badge-red">Désactivé</span>
@@ -48,10 +48,10 @@
                 <% sessions.forEach((s, i) => { %>
                     <tr>
                         <td class="text-subtle">#<%= s.id %></td>
-                        <td><%= s.start_time %></td>
-                        <td><%= s.end_time || '—' %></td>
+                        <td><%= s.startTime %></td>
+                        <td><%= s.endTime || '—' %></td>
                         <td>
-                            <% if (!s.end_time) { %>
+                            <% if (!s.endTime) { %>
                                 <span class="badge badge-green"><span class="badge-dot"></span>En cours</span>
                             <% } else { %>
                                 <span class="badge badge-gray">Terminé</span>
