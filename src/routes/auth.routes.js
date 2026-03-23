@@ -1,26 +1,26 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const db = require('../db/database');
+const prisma = require('../db/prisma');
 
 const router = express.Router();
 
-router.get('/login', (req, res) => {
+router.get('/login', (_req, res) => {
     res.render('auth/login');
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
         return res.render('auth/login', { error: 'Utilisateur non trouvé' });
     }
 
-    if (user.is_active === 0) {
+    if (!user.isActive) {
         return res.render('auth/login', { error: 'Compte désactivé' });
     }
 
-    const valid = bcrypt.compareSync(password, user.password_hash);
+    const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) {
         return res.render('auth/login', { error: 'Mot de passe incorrect' });
     }
@@ -32,13 +32,11 @@ router.post('/login', (req, res) => {
     };
 
     res.redirect(user.role === 'admin' ? '/admin' : '/employee');
-
 });
 
 router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/login');
 });
-
 
 module.exports = router;

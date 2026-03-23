@@ -1,15 +1,25 @@
 const bcrypt = require('bcrypt');
-const db = require('./database');
+const prisma = require('./prisma');
 
-const existing = db.prepare(`SELECT id FROM users WHERE role = 'admin' LIMIT 1`).get();
+async function main() {
+    const existing = await prisma.user.findFirst({ where: { role: 'admin' } });
 
-if (!existing) {
-    const hash = bcrypt.hashSync('admin123', 10);
-    db.prepare(`
-        INSERT INTO users (name, email, password_hash, role)
-        VALUES ('Admin', 'admin@local.dev', ?, 'admin')
-    `).run(hash);
-    console.log('Compte admin créé : admin@local.dev / admin123');
-} else {
-    console.log('Compte admin déjà existant, rien à faire.');
+    if (!existing) {
+        const hash = await bcrypt.hash('admin123', 10);
+        await prisma.user.create({
+            data: {
+                name: 'Admin',
+                email: 'admin@local.dev',
+                passwordHash: hash,
+                role: 'admin',
+            },
+        });
+        console.log('Compte admin créé : admin@local.dev / admin123');
+    } else {
+        console.log('Compte admin déjà existant, rien à faire.');
+    }
 }
+
+main()
+    .catch(console.error)
+    .finally(() => prisma.$disconnect());

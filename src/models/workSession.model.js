@@ -1,37 +1,36 @@
-const db = require('../db/database');
+const prisma = require('../db/prisma');
 
-function startSession(userId) {
-  const sql = `
-    INSERT INTO work_sessions (user_id, start_time)
-    VALUES (?, datetime('now'))
-  `;
-
-  return db.prepare(sql).run(userId);
+async function startSession(userId) {
+  return prisma.workSession.create({
+    data: {
+      userId,
+      startTime: new Date(),
+    },
+  });
 }
 
-function getUserSessions(userId) {
-  const sql = `
-    SELECT * FROM work_sessions
-    WHERE user_id = ?
-    ORDER BY start_time DESC
-  `;
-
-  return db.prepare(sql).all(userId);
+async function getUserSessions(userId) {
+  return prisma.workSession.findMany({
+    where: { userId },
+    orderBy: { startTime: 'desc' },
+  });
 }
 
-function endSession(userId) {
-  const sql = `
-    UPDATE work_sessions
-    SET end_time = datetime('now')
-    WHERE user_id = ?
-      AND end_time IS NULL
-  `;
+async function endSession(userId) {
+  const session = await prisma.workSession.findFirst({
+    where: { userId, endTime: null },
+  });
 
-  return db.prepare(sql).run(userId);
+  if (!session) return null;
+
+  return prisma.workSession.update({
+    where: { id: session.id },
+    data: { endTime: new Date() },
+  });
 }
 
 module.exports = {
   startSession,
   getUserSessions,
-  endSession
+  endSession,
 };
