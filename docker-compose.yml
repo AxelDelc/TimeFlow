@@ -9,4 +9,10 @@ services:
     volumes:
       # Persiste la base de données SQLite entre les redémarrages du conteneur
       - ./dev.db:/app/dev.db
-    restart: unless-stopped
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./src
+          target: /app
+          ignore:
+            - node_modules/
