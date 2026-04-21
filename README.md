@@ -11,7 +11,8 @@ Application web de pointage pour PME. Permet aux salariés de pointer leurs entr
 | Runtime | Node.js 20 |
 | Framework | Express 5 |
 | Vues | EJS |
-| Base de données | SQLite (better-sqlite3) |
+| Base de données | PostgreSQL |
+| ORM | Prisma 7 |
 | Authentification | Sessions (express-session) + bcrypt |
 | CSS | Vanilla CSS (fichier unique) |
 | Conteneurisation | Docker + Docker Compose |
@@ -46,9 +47,7 @@ TimeFlow/
 │   ├── app.js                   # Configuration Express (middlewares, routes)
 │   ├── server.js                # Point d'entrée, écoute sur le port
 │   ├── db/
-│   │   ├── database.js          # Connexion SQLite
-│   │   ├── schema.sql           # Définition des tables
-│   │   ├── init-db.js           # Initialisation + migrations
+│   │   ├── prisma.js            # Instance Prisma Client (PostgreSQL)
 │   │   └── seed-admin.js        # Crée le compte admin s'il n'existe pas
 │   ├── models/
 │   │   └── workSession.model.js # Requêtes BDD pour les sessions
@@ -63,6 +62,10 @@ TimeFlow/
 │       ├── auth/                # login.ejs
 │       ├── admin/               # dashboard, employees, sessions, ...
 │       └── employee/            # dashboard.ejs
+├── prisma/
+│   ├── schema.prisma            # Schéma de la base de données
+│   ├── migrations/              # Historique des migrations
+│   └── prisma.config.ts         # Configuration Prisma CLI
 ├── public/
 │   └── css/
 │       └── main.css             # Styles globaux
@@ -79,21 +82,21 @@ TimeFlow/
 ### Table `users`
 | Colonne | Type | Description |
 |---|---|---|
-| `id` | INTEGER PK | Identifiant auto-incrémenté |
+| `id` | SERIAL PK | Identifiant auto-incrémenté |
 | `name` | TEXT | Nom complet |
 | `email` | TEXT UNIQUE | Adresse email (identifiant de connexion) |
 | `password_hash` | TEXT | Mot de passe hashé (bcrypt) |
-| `role` | TEXT | `admin` ou `employee` |
-| `is_active` | INTEGER | `1` = actif, `0` = désactivé |
-| `created_at` | DATETIME | Date de création |
+| `role` | ENUM | `admin` ou `employee` |
+| `is_active` | BOOLEAN | `true` = actif, `false` = désactivé |
+| `created_at` | TIMESTAMP | Date de création |
 
 ### Table `work_sessions`
 | Colonne | Type | Description |
 |---|---|---|
-| `id` | INTEGER PK | Identifiant auto-incrémenté |
+| `id` | SERIAL PK | Identifiant auto-incrémenté |
 | `user_id` | INTEGER FK | Référence vers `users.id` |
-| `start_time` | DATETIME | Heure d'entrée |
-| `end_time` | DATETIME | Heure de sortie (`NULL` si en cours) |
+| `start_time` | TIMESTAMP | Heure d'entrée |
+| `end_time` | TIMESTAMP | Heure de sortie (`NULL` si en cours) |
 | `duration` | INTEGER | Réservé (non utilisé) |
 
 ---
@@ -102,16 +105,20 @@ TimeFlow/
 
 ### Sans Docker (développement local)
 
-**Prérequis :** Node.js 18+
+**Prérequis :** Node.js 20+, PostgreSQL
 
 ```bash
 # 1. Installer les dépendances
 npm install
 
-# 2. Initialiser la base de données et créer le compte admin par défaut
-node src/db/init-db.js && node src/db/seed-admin.js
+# 2. Configurer la base de données dans .env
+# DATABASE_URL="postgresql://user:password@localhost:5432/timeflow"
 
-# 3. Lancer en mode développement (rechargement automatique)
+# 3. Appliquer les migrations et créer le compte admin
+npx prisma migrate deploy
+node src/db/seed-admin.js
+
+# 4. Lancer en mode développement (rechargement automatique)
 npm run dev
 
 # ou en mode production
@@ -127,7 +134,7 @@ L'application est accessible sur [http://localhost:3000](http://localhost:3000)
 **Prérequis :** Docker Desktop
 
 ```bash
-# Construire et démarrer
+# Construire et démarrer (inclut PostgreSQL)
 docker compose up --build
 
 # En arrière-plan
@@ -140,7 +147,7 @@ docker compose down
 docker compose down -v
 ```
 
-> La base de données SQLite est stockée dans un volume Docker nommé `sqlite_data`. Elle persiste entre les redémarrages du conteneur.
+> La base de données PostgreSQL est stockée dans un volume Docker nommé `postgres_data`. Elle persiste entre les redémarrages du conteneur.
 
 ---
 
@@ -150,6 +157,7 @@ docker compose down -v
 |---|---|---|
 | `PORT` | `3000` | Port d'écoute du serveur |
 | `NODE_ENV` | — | Environnement (`production`, `development`) |
+| `DATABASE_URL` | — | URL de connexion PostgreSQL |
 
 ---
 
@@ -190,4 +198,4 @@ docker compose down -v
 | `admin` | Tout l'espace `/admin` |
 | `employee` | Uniquement `/employee` (ses propres données) |
 
-Un compte désactivé (`is_active = 0`) est bloqué à la connexion.
+Un compte désactivé est bloqué à la connexion.

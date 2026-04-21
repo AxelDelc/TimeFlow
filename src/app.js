@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(
     session({
-        secret: 'dev-secret-change-later',
+        secret: process.env.SESSION_SECRET || 'dev-secret-change-later',
         resave: false,
         saveUninitialized: false
     })
