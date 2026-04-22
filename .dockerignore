@@ -1,5 +1,5 @@
 node_modules
-src/db/*.sqlite
 .env
 .git
 *.md
+test-results
