@@ -1,3 +1,7 @@
 node_modules/
-src/db/database.sqlite
 .env
+
+# Playwright
+test-results/
+playwright-report/
+.playwright/
