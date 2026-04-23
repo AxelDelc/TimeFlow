@@ -14,15 +14,37 @@ enum Role {
   employee
 }
 
+enum SlotType {
+  work
+  break
+}
+
+enum OvertimeReason {
+  colleague_abscence
+  client_issue
+  manager_request
+  other
+}
+
+enum ChangeRequestStatus {
+  pending
+  approved
+  rejected
+}
+
 model User {
-  id           Int           @id @default(autoincrement())
-  name         String
-  email        String        @unique
-  passwordHash String        @map("password_hash")
-  role         Role
-  isActive     Boolean       @default(true) @map("is_active")
-  createdAt    DateTime      @default(now()) @map("created_at")
-  workSessions WorkSession[]
+  id                   Int                     @id @default(autoincrement())
+  name                 String
+  email                String                  @unique
+  passwordHash         String                  @map("password_hash")
+  role                 Role
+  isActive             Boolean                 @default(true) @map("is_active")
+  createdAt            DateTime                @default(now()) @map("created_at")
+  workSessions         WorkSession[]
+  scheduleSlots        ScheduleSlot[]
+  employeeRestrictions EmployeeRestrictions?
+  overtimeDeclarations OvertimeDeclaration[]
+  changeRequests       ScheduleChangeRequest[]
 
   @@map("users")
 }
@@ -36,4 +58,60 @@ model WorkSession {
   user      User      @relation(fields: [userId], references: [id])
 
   @@map("work_sessions")
+}
+
+model ScheduleSlot {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  date      DateTime @db.Date
+  startTime DateTime @map("start_time") @db.Time
+  endTime   DateTime @map("end_time") @db.Time
+  type      SlotType @default(work)
+  user      User     @relation(fields: [userId], references: [id])
+
+  changeRequests ScheduleChangeRequest[]
+
+  @@map("schedule_slots")
+}
+
+model EmployeeRestrictions {
+  id                  Int     @id @default(autoincrement())
+  userId              Int     @unique @map("user_id")
+  weeklyHoursTarget   Float   @default(35) @map("weekly_hours_target")
+  maxConsecutiveHours Float   @default(8) @map("break_frequency_hours")
+  notes               String?
+  user                User    @relation(fields: [userId], references: [id])
+
+  @@map("employee_restrictions")
+}
+
+model OvertimeDeclaration {
+  id        Int            @id @default(autoincrement())
+  userId    Int            @map("user_id")
+  date      DateTime       @db.Date
+  startTime DateTime       @map("start_time") @db.Time
+  endTime   DateTime       @map("end_time") @db.Time
+  reason    OvertimeReason
+  comment   String?
+  createdAt DateTime       @default(now()) @map("created_at")
+  user      User           @relation(fields: [userId], references: [id])
+
+  @@map("overtime_declarations")
+}
+
+model ScheduleChangeRequest {
+  id              Int                 @id @default(autoincrement())
+  userId          Int                 @map("user_id")
+  originalSlotId  Int                 @map("original_slot_id")
+  newDate         DateTime            @map("new_date") @db.Date
+  newStartTime    DateTime            @map("new_start_time") @db.Time
+  newEndTime      DateTime            @map("new_end_time") @db.Time
+  status          ChangeRequestStatus @default(pending)
+  employeeMessage String?             @map("employee_message")
+  adminMessage    String?             @map("admin_message")
+  createdAt       DateTime            @default(now()) @map("created_at")
+  user            User                @relation(fields: [userId], references: [id])
+  originalSlot    ScheduleSlot        @relation(fields: [originalSlotId], references: [id])
+
+  @@map("schedule_change_requests")
 }
