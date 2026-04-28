@@ -4,6 +4,7 @@ const path = require('path');
 const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
 const employeeRoutes = require('./routes/employee.routes');
+const scheduleRoutes = require('./routes/schedule.routes');
 
 const app = express();
 
@@ -32,6 +33,9 @@ app.use('/admin', adminRoutes);
 
 //Routes employées
 app.use('/employee', employeeRoutes);
+
+// Routes planning (admin)
+app.use('/admin', scheduleRoutes);
 
 app.get('/', (req, res) => {
     res.render('home');
