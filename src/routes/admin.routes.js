@@ -135,5 +135,41 @@ router.get('/sessions', requireAdmin, async (_req, res) => {
 });
 
 
+// afficher le planning d'un employé
+router.get('/schedule/:userId', requireAdmin, async (req, res) => {
+    const userId = parseInt(req.params.userId);
+    try {
+        const employeeRole = await prisma.user.findFirst({
+            where: { id: userId, role: 'employee' },
+        });
+        if (!employeeRole) return res.status(404).send('Employé introuvable');
+        
+        const weekStart = req.query.weekStart ? new Date(req.query.weekStart) : new Date();
+        weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Lundi de la semaine
+        weekStart.setHours(0, 0, 0, 0);
+
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekEnd.getDate() + 6); // Dimanche de la semaine
+        weekEnd.setHours(23, 59, 59, 999);
+
+        const timeSchedule = await prisma.scheduleSlot.findMany({
+            where: {
+                userId,
+                date: { gte: weekStart, lte: weekEnd },
+            },
+            orderBy: { date: 'asc' },
+        });
+
+        const restrictions = await prisma.employeeRestrictions.findUnique({
+            where: { userId },
+        });
+
+        res.render('admin/schedule', { employeeRole, timeSchedule, restrictions, user: req.session.user });
+
+    } catch (error) {
+        console.error(error);
+        res.status(404).send('Erreur lors de la récupération du planning');
+    }
+});
 
 module.exports = router;
