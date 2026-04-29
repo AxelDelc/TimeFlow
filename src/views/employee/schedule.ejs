@@ -1,0 +1,203 @@
+<%- include('../layout/header', { pageTitle: 'Mon planning', currentPage: 'schedule', user: user }) %>
+
+<%
+const HOUR_START = 7;
+const HOUR_END = 20;
+const HOUR_HEIGHT = 64;
+
+const prevWeek = new Date(weekStart);
+prevWeek.setDate(prevWeek.getDate() - 7);
+const nextWeek = new Date(weekStart);
+nextWeek.setDate(nextWeek.getDate() + 7);
+const weekEnd = new Date(weekStart);
+weekEnd.setDate(weekStart.getDate() + 6);
+const prevWeekStr = prevWeek.toISOString().split('T')[0];
+const nextWeekStr = nextWeek.toISOString().split('T')[0];
+const weekLabel = weekStart.toLocaleDateString('fr-FR') + ' – ' + weekEnd.toLocaleDateString('fr-FR');
+const today = new Date(); today.setHours(0,0,0,0);
+
+const days = [];
+for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(weekStart.getDate() + i);
+    days.push(d);
+}
+
+const slotsByDay = {};
+days.forEach(d => { slotsByDay[d.toDateString()] = []; });
+timeSchedule.forEach(slot => {
+    const key = new Date(slot.date).toDateString();
+    if (slotsByDay[key]) slotsByDay[key].push(slot);
+});
+%>
+
+<div class="card card--mb">
+    <div class="card-header">
+        <a href="/employee/schedule?weekStart=<%= prevWeekStr %>" class="btn btn-ghost btn-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Précédente
+        </a>
+        <span class="card-title">Semaine du <%= weekLabel %></span>
+        <a href="/employee/schedule?weekStart=<%= nextWeekStr %>" class="btn btn-ghost btn-sm">
+            Suivante
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+    </div>
+
+    <div class="sc-calendar">
+        <div class="sc-header">
+            <div></div>
+            <% days.forEach(day => { %>
+            <div class="sc-day-header <%= day.toDateString() === today.toDateString() ? 'today' : '' %>">
+                <%= day.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' }) %>
+            </div>
+            <% }) %>
+        </div>
+        <div class="sc-body">
+            <div class="sc-time-col">
+                <% for (let h = HOUR_START; h <= HOUR_END; h++) { %>
+                <div class="sc-hour-label" style="height:<%= HOUR_HEIGHT %>px"><%= String(h).padStart(2,'0') %>h</div>
+                <% } %>
+            </div>
+            <% days.forEach(day => { %>
+            <div class="sc-day-col" style="height:<%= (HOUR_END - HOUR_START) * HOUR_HEIGHT %>px">
+                <% for (let h = 0; h < (HOUR_END - HOUR_START); h++) { %>
+                <div class="sc-grid-line" style="top:<%= h * HOUR_HEIGHT %>px"></div>
+                <% } %>
+                <% slotsByDay[day.toDateString()].forEach(slot => {
+                    const s = new Date(slot.startTime);
+                    const e = new Date(slot.endTime);
+                    const top = (s.getHours() + s.getMinutes()/60 - HOUR_START) * HOUR_HEIGHT;
+                    const height = Math.max((e.getHours() + e.getMinutes()/60 - s.getHours() - s.getMinutes()/60) * HOUR_HEIGHT, 20);
+                    const startStr = s.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                    const endStr = e.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                    const dateStr = new Date(slot.date).toISOString().split('T')[0];
+                %>
+                <div class="sc-slot sc-slot--<%= slot.type %>" style="top:<%= top %>px;height:<%= height %>px" title="<%= startStr %> – <%= endStr %>">
+                    <span class="sc-slot-time"><%= startStr %> – <%= endStr %></span>
+                    <span class="sc-slot-label"><%= slot.type === 'work' ? 'Travail' : 'Pause' %></span>
+                    <button class="sc-slot-btn" onclick="openChangeRequest(<%= slot.id %>, '<%= dateStr %>', '<%= startStr %>', '<%= endStr %>')">Modifier</button>
+                </div>
+                <% }) %>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <div class="card-header"><span class="card-title">Déclarer des heures sup</span></div>
+        <div class="card-body">
+            <div id="overtime-error" class="alert alert-error" style="display:none"></div>
+            <form id="overtime-form">
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="date" class="form-input" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Début</label>
+                        <input type="time" name="startTime" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fin</label>
+                        <input type="time" name="endTime" class="form-input" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Motif</label>
+                    <select name="reason" class="form-input" required>
+                        <option value="colleague_abscence">Absence d'un collègue</option>
+                        <option value="client_issue">Problème client</option>
+                        <option value="manager_request">Demande du manager</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Commentaire</label>
+                    <textarea name="comment" class="form-input" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Déclarer</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card" id="change-request-panel" style="display:none">
+        <div class="card-header">
+            <span class="card-title">Demande de modification</span>
+            <button class="btn btn-ghost btn-sm" onclick="closeChangeRequest()">Annuler</button>
+        </div>
+        <div class="card-body">
+            <div id="change-request-error" class="alert alert-error" style="display:none"></div>
+            <p class="text-muted" id="change-request-info" style="font-size:13px;margin-bottom:12px"></p>
+            <form id="change-request-form">
+                <input type="hidden" name="originalSlotId" id="originalSlotId">
+                <div class="form-group">
+                    <label class="form-label">Nouvelle date</label>
+                    <input type="date" name="newDate" class="form-input" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Nouveau début</label>
+                        <input type="time" name="newStartTime" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nouvelle fin</label>
+                        <input type="time" name="newEndTime" class="form-input" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Message pour l'admin</label>
+                    <textarea name="employeeMessage" class="form-input" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Envoyer la demande</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openChangeRequest(slotId, date, start, end) {
+    document.getElementById('originalSlotId').value = slotId;
+    document.getElementById('change-request-info').textContent = 'Créneau actuel : ' + date + ' de ' + start + ' à ' + end;
+    const panel = document.getElementById('change-request-panel');
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth' });
+}
+
+function closeChangeRequest() {
+    document.getElementById('change-request-panel').style.display = 'none';
+    document.getElementById('change-request-form').reset();
+}
+
+document.getElementById('overtime-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    const errorEl = document.getElementById('overtime-error');
+    errorEl.style.display = 'none';
+    const res = await fetch('/employee/overtime', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    if (res.ok) { e.target.reset(); alert('Heures supplémentaires déclarées.'); }
+    else { errorEl.textContent = 'Erreur lors de la déclaration.'; errorEl.style.display = 'block'; }
+});
+
+document.getElementById('change-request-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    const errorEl = document.getElementById('change-request-error');
+    errorEl.style.display = 'none';
+    const res = await fetch('/employee/schedule/change-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    if (res.ok) { closeChangeRequest(); alert('Demande envoyée.'); }
+    else { errorEl.textContent = "Erreur lors de l'envoi."; errorEl.style.display = 'block'; }
+});
+</script>
+
+<%- include('../layout/footer') %>

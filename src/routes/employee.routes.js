@@ -26,11 +26,19 @@ router.post('/end', requireAuth, async (req, res) => {
 // Consulter le planning de la semaine
 router.get('/schedule', requireAuth, async (req, res) => {
     const userId = req.session.user.id;
+
+    const weekStart = req.query.weekStart ? new Date(req.query.weekStart) : new Date();
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
+    weekStart.setHours(0, 0, 0, 0);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
+
     const timeSchedule = await prisma.scheduleSlot.findMany({
-        where: { userId },
+        where: { userId, date: { gte: weekStart, lte: weekEnd } },
         orderBy: { date: 'asc' },
     });
-    res.render('employee/schedule', { timeSchedule, user: req.session.user });
+    res.render('employee/schedule', { timeSchedule, weekStart, user: req.session.user });
 })
 
 // Déclarer ses heures supplémentaires

@@ -281,3 +281,119 @@ input:focus {
 .text-subtle { color: #94a3b8; }
 .ml-auto     { margin-left: auto; }
 .mb-4        { margin-bottom: 16px; }
+
+/* ===== CALENDRIER HEBDOMADAIRE ===== */
+.sc-calendar {
+    overflow-x: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.sc-header {
+    display: grid;
+    grid-template-columns: 52px repeat(7, 1fr);
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+}
+
+.sc-day-header {
+    padding: 10px 6px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    border-left: 1px solid #e2e8f0;
+    text-transform: capitalize;
+}
+
+.sc-day-header.today {
+    color: #3b82f6;
+    background: #eff6ff;
+}
+
+.sc-body {
+    display: grid;
+    grid-template-columns: 52px repeat(7, 1fr);
+}
+
+.sc-time-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.sc-hour-label {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 2px 8px 0 0;
+    font-size: 11px;
+    color: #94a3b8;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.sc-day-col {
+    position: relative;
+    border-left: 1px solid #e2e8f0;
+    box-sizing: border-box;
+    min-width: 90px;
+}
+
+.sc-grid-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #f1f5f9;
+}
+
+.sc-grid-line.half {
+    border-top: 1px dashed #f1f5f9;
+}
+
+.sc-slot {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    border-radius: 5px;
+    padding: 4px 6px;
+    font-size: 11px;
+    overflow: hidden;
+    cursor: default;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sc-slot--work {
+    background: #dbeafe;
+    border-left: 3px solid #3b82f6;
+    color: #1e40af;
+}
+
+.sc-slot--break {
+    background: #fef9c3;
+    border-left: 3px solid #eab308;
+    color: #854d0e;
+}
+
+.sc-slot-time { font-weight: 600; font-size: 10.5px; }
+.sc-slot-label { font-size: 10px; opacity: 0.85; }
+
+.sc-slot-btn {
+    margin-top: auto;
+    font-size: 10px;
+    background: rgba(0,0,0,0.08);
+    border: none;
+    border-radius: 3px;
+    padding: 1px 5px;
+    cursor: pointer;
+    color: inherit;
+    align-self: flex-start;
+}
+
+.sc-slot-btn:hover { background: rgba(0,0,0,0.15); }

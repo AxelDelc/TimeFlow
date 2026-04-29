@@ -164,7 +164,7 @@ router.get('/schedule/:userId', requireAdmin, async (req, res) => {
             where: { userId },
         });
 
-        res.render('admin/schedule', { employeeRole, timeSchedule, restrictions, user: req.session.user });
+        res.render('admin/schedule', { employee: employeeRole, timeSchedule, restrictions, weekStart, user: req.session.user });
 
     } catch (error) {
         console.error(error);
