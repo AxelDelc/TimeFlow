@@ -5,31 +5,39 @@ const HOUR_START = 7;
 const HOUR_END = 20;
 const HOUR_HEIGHT = 64;
 
-const prevWeek = new Date(weekStart);
-prevWeek.setDate(prevWeek.getDate() - 7);
-const nextWeek = new Date(weekStart);
-nextWeek.setDate(nextWeek.getDate() + 7);
-const weekEnd = new Date(weekStart);
-weekEnd.setDate(weekStart.getDate() + 6);
-const prevWeekStr = prevWeek.toISOString().split('T')[0];
-const nextWeekStr = nextWeek.toISOString().split('T')[0];
-const weekLabel = weekStart.toLocaleDateString('fr-FR') + ' – ' + weekEnd.toLocaleDateString('fr-FR');
-const today = new Date(); today.setHours(0,0,0,0);
+function utcDateStr(d) {
+    return d.getUTCFullYear() + '-' + String(d.getUTCMonth()+1).padStart(2,'0') + '-' + String(d.getUTCDate()).padStart(2,'0');
+}
+
+const prevWeek = new Date(weekStart); prevWeek.setUTCDate(weekStart.getUTCDate() - 7);
+const nextWeek = new Date(weekStart); nextWeek.setUTCDate(weekStart.getUTCDate() + 7);
+const weekEnd  = new Date(weekStart); weekEnd.setUTCDate(weekStart.getUTCDate() + 6);
+const prevWeekStr = utcDateStr(prevWeek);
+const nextWeekStr = utcDateStr(nextWeek);
+const weekLabel = weekStart.toLocaleDateString('fr-FR', { timeZone: 'UTC' }) + ' – ' + weekEnd.toLocaleDateString('fr-FR', { timeZone: 'UTC' });
+const todayStr = utcDateStr(new Date());
 
 const days = [];
 for (let i = 0; i < 7; i++) {
     const d = new Date(weekStart);
-    d.setDate(weekStart.getDate() + i);
+    d.setUTCDate(weekStart.getUTCDate() + i);
     days.push(d);
 }
 
 const slotsByDay = {};
-days.forEach(d => { slotsByDay[d.toDateString()] = []; });
+days.forEach(d => { slotsByDay[utcDateStr(d)] = []; });
 timeSchedule.forEach(slot => {
-    const key = new Date(slot.date).toDateString();
+    const key = utcDateStr(new Date(slot.date));
     if (slotsByDay[key]) slotsByDay[key].push(slot);
 });
 %>
+
+<div id="schedule-data"
+    data-employee-id="<%= employee.id %>"
+    data-hour-start="<%= HOUR_START %>"
+    data-hour-height="<%= HOUR_HEIGHT %>"
+    style="display:none">
+</div>
 
 <div class="mb-4">
     <a href="/admin/employees" class="btn btn-ghost btn-sm">
@@ -72,8 +80,8 @@ timeSchedule.forEach(slot => {
         <div class="sc-header">
             <div></div>
             <% days.forEach(day => { %>
-            <div class="sc-day-header <%= day.toDateString() === today.toDateString() ? 'today' : '' %>">
-                <%= day.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' }) %>
+            <div class="sc-day-header <%= utcDateStr(day) === todayStr ? 'today' : '' %>">
+                <%= day.toLocaleDateString('fr-FR', { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }) %>
             </div>
             <% }) %>
         </div>
@@ -84,22 +92,29 @@ timeSchedule.forEach(slot => {
                 <% } %>
             </div>
             <% days.forEach(day => { %>
-            <div class="sc-day-col" style="height:<%= (HOUR_END - HOUR_START) * HOUR_HEIGHT %>px">
+            <div class="sc-day-col"
+                data-date="<%= utcDateStr(day) %>"
+                style="height:<%= (HOUR_END - HOUR_START) * HOUR_HEIGHT %>px">
                 <% for (let h = 0; h < (HOUR_END - HOUR_START); h++) { %>
                 <div class="sc-grid-line" style="top:<%= h * HOUR_HEIGHT %>px"></div>
                 <% } %>
-                <% slotsByDay[day.toDateString()].forEach(slot => {
+                <% slotsByDay[utcDateStr(day)].forEach(slot => {
                     const s = new Date(slot.startTime);
                     const e = new Date(slot.endTime);
-                    const top = (s.getHours() + s.getMinutes()/60 - HOUR_START) * HOUR_HEIGHT;
-                    const height = Math.max((e.getHours() + e.getMinutes()/60 - s.getHours() - s.getMinutes()/60) * HOUR_HEIGHT, 20);
-                    const startStr = s.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-                    const endStr = e.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                    const top = (s.getUTCHours() + s.getUTCMinutes()/60 - HOUR_START) * HOUR_HEIGHT;
+                    const height = Math.max((e.getUTCHours() + e.getUTCMinutes()/60 - s.getUTCHours() - s.getUTCMinutes()/60) * HOUR_HEIGHT, 20);
+                    const startStr = s.toLocaleTimeString('fr-FR', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+                    const endStr = e.toLocaleTimeString('fr-FR', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
                 %>
-                <div class="sc-slot sc-slot--<%= slot.type %>" style="top:<%= top %>px;height:<%= height %>px" title="<%= startStr %> – <%= endStr %>">
+                <div class="sc-slot sc-slot--<%= slot.type %>"
+                    style="top:<%= top %>px;height:<%= height %>px"
+                    data-slot-id="<%= slot.id %>"
+                    data-start="<%= startStr %>"
+                    data-end="<%= endStr %>"
+                    data-type="<%= slot.type %>"
+                    data-date="<%= utcDateStr(new Date(slot.date)) %>">
                     <span class="sc-slot-time"><%= startStr %> – <%= endStr %></span>
                     <span class="sc-slot-label"><%= slot.type === 'work' ? 'Travail' : 'Pause' %></span>
-                    <button class="sc-slot-btn" onclick="deleteSlot(<%= slot.id %>)">Supprimer</button>
                 </div>
                 <% }) %>
             </div>
@@ -108,99 +123,86 @@ timeSchedule.forEach(slot => {
     </div>
 </div>
 
-<div class="dashboard-grid">
-    <div class="card">
-        <div class="card-header"><span class="card-title">Ajouter un créneau</span></div>
-        <div class="card-body">
-            <div id="slot-error" class="alert alert-error" style="display:none"></div>
-            <form id="add-slot-form">
-                <div class="form-group">
-                    <label class="form-label">Date</label>
-                    <input type="date" name="date" class="form-input" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Début</label>
-                        <input type="time" name="startTime" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Fin</label>
-                        <input type="time" name="endTime" class="form-input" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Type</label>
-                    <select name="type" class="form-input">
-                        <option value="work">Travail</option>
-                        <option value="break">Pause</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary w-full">Ajouter</button>
-            </form>
-        </div>
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">Contraintes</span>
     </div>
-
-    <div class="card">
-        <div class="card-header"><span class="card-title">Contraintes</span></div>
-        <div class="card-body">
-            <form id="restrictions-form">
-                <div class="form-group">
-                    <label class="form-label">Heures hebdomadaires cibles</label>
-                    <input type="number" name="weeklyHoursTarget" class="form-input" min="1" max="48" step="0.5"
-                        value="<%= restrictions ? restrictions.weeklyHoursTarget : 35 %>">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Heures consécutives max</label>
-                    <input type="number" name="maxConsecutiveHours" class="form-input" min="1" max="12" step="0.5"
-                        value="<%= restrictions ? restrictions.maxConsecutiveHours : 8 %>">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Notes</label>
-                    <textarea name="notes" class="form-input" rows="3"><%= restrictions ? (restrictions.notes || '') : '' %></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary w-full">Enregistrer</button>
-            </form>
-        </div>
+    <div class="card-body">
+        <form id="restrictions-form" style="display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:12px;align-items:end">
+            <div class="form-group" style="margin:0">
+                <label class="form-label">Heures hebdo cibles</label>
+                <input type="number" name="weeklyHoursTarget" class="form-input" min="1" max="48" step="0.5"
+                    value="<%= restrictions ? restrictions.weeklyHoursTarget : 35 %>">
+            </div>
+            <div class="form-group" style="margin:0">
+                <label class="form-label">Heures consécutives max</label>
+                <input type="number" name="maxConsecutiveHours" class="form-input" min="1" max="12" step="0.5"
+                    value="<%= restrictions ? restrictions.maxConsecutiveHours : 8 %>">
+            </div>
+            <div class="form-group" style="margin:0">
+                <label class="form-label">Notes</label>
+                <input type="text" name="notes" class="form-input"
+                    value="<%= restrictions ? (restrictions.notes || '') : '' %>">
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
     </div>
 </div>
 
-<script>
-const employeeId = <%= employee.id %>;
+<!-- Modale : nouveau créneau -->
+<dialog id="modal-add">
+    <div class="modal-header">
+        <span class="modal-title">Nouveau créneau</span>
+        <button class="modal-close" onclick="document.getElementById('modal-add').close()">×</button>
+    </div>
+    <div class="modal-body">
+        <div id="slot-error" class="alert alert-error" style="display:none"></div>
+        <form id="add-slot-form">
+            <input type="hidden" name="date" id="new-slot-date">
+            <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="text" id="new-slot-date-display" class="form-input" disabled>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Début</label>
+                    <input type="time" name="startTime" id="new-slot-start" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fin</label>
+                    <input type="time" name="endTime" id="new-slot-end" class="form-input" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Type</label>
+                <select name="type" class="form-input">
+                    <option value="work">Travail</option>
+                    <option value="break">Pause</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="document.getElementById('modal-add').close()">Annuler</button>
+        <button class="btn btn-primary" id="btn-add-slot">Ajouter</button>
+    </div>
+</dialog>
 
-async function deleteSlot(slotId) {
-    if (!confirm('Supprimer ce créneau ?')) return;
-    const res = await fetch('/admin/schedule/slot/' + slotId, { method: 'DELETE' });
-    if (res.ok) location.reload();
-    else alert('Erreur lors de la suppression');
-}
+<!-- Modale : détail créneau -->
+<dialog id="modal-slot">
+    <div class="modal-header">
+        <span class="modal-title" id="modal-slot-title">Créneau</span>
+        <button class="modal-close" onclick="document.getElementById('modal-slot').close()">×</button>
+    </div>
+    <div class="modal-body">
+        <p id="modal-slot-info" style="color:#475569;font-size:14px;margin-bottom:4px"></p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="document.getElementById('modal-slot').close()">Fermer</button>
+        <button class="btn btn-danger" id="btn-delete-slot">Supprimer</button>
+    </div>
+</dialog>
 
-document.getElementById('add-slot-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.target));
-    const errorEl = document.getElementById('slot-error');
-    errorEl.style.display = 'none';
-    const res = await fetch('/admin/schedule/' + employeeId + '/slot', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
-    if (res.ok) location.reload();
-    else { const j = await res.json(); errorEl.textContent = j.error; errorEl.style.display = 'block'; }
-});
-
-document.getElementById('restrictions-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.target));
-    data.weeklyHoursTarget = parseFloat(data.weeklyHoursTarget);
-    data.maxConsecutiveHours = parseFloat(data.maxConsecutiveHours);
-    const res = await fetch('/admin/schedule/' + employeeId + '/restrictions', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
-    if (res.ok) location.reload();
-    else alert('Erreur lors de la mise à jour des contraintes');
-});
-</script>
+<script src="/js/admin-schedule.js"></script>
 
 <%- include('../layout/footer') %>

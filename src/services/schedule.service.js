@@ -1,8 +1,8 @@
 const prisma = require('../db/prisma');
 
 function validateSlotHours(startTime, endTime) {
-  const startHour = startTime.getHours() + startTime.getMinutes() / 60;
-  const endHour = endTime.getHours() + endTime.getMinutes() / 60;
+  const startHour = startTime.getUTCHours() + startTime.getUTCMinutes() / 60;
+  const endHour = endTime.getUTCHours() + endTime.getUTCMinutes() / 60;
 
   if (startHour < 7) {
     return "Le créneau ne peut pas commencer avant 07:00.";

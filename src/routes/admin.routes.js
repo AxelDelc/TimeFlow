@@ -144,13 +144,12 @@ router.get('/schedule/:userId', requireAdmin, async (req, res) => {
         });
         if (!employeeRole) return res.status(404).send('Employé introuvable');
         
-        const weekStart = req.query.weekStart ? new Date(req.query.weekStart) : new Date();
-        weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Lundi de la semaine
-        weekStart.setHours(0, 0, 0, 0);
-
-        const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekEnd.getDate() + 6); // Dimanche de la semaine
-        weekEnd.setHours(23, 59, 59, 999);
+        const dateStr = req.query.weekStart || new Date().toISOString().split('T')[0];
+        const [y, m, d] = dateStr.split('-').map(Number);
+        const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+        const mondayOffset = dow === 0 ? -6 : 1 - dow;
+        const weekStart = new Date(Date.UTC(y, m - 1, d + mondayOffset));
+        const weekEnd = new Date(Date.UTC(y, m - 1, d + mondayOffset + 6, 23, 59, 59, 999));
 
         const timeSchedule = await prisma.scheduleSlot.findMany({
             where: {

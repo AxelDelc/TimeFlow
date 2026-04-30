@@ -34,15 +34,14 @@ router.post("/schedule/:userId/slot", requireAdmin, async (req, res) => {
   const userId = parseInt(req.params.userId);
   const { date, startTime, endTime, type } = req.body;
 
-  const weekStart = new Date(date);
-  weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
-  weekStart.setHours(0, 0, 0, 0);
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekStart.getDate() + 6);
-  weekEnd.setHours(23, 59, 59, 999);
+  const [y, m, d] = date.split('-').map(Number);
+  const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  const mondayOffset = dow === 0 ? -6 : 1 - dow;
+  const weekStart = new Date(Date.UTC(y, m - 1, d + mondayOffset));
+  const weekEnd = new Date(Date.UTC(y, m - 1, d + mondayOffset + 6, 23, 59, 59, 999));
 
-  const startDate = new Date(`${date}T${startTime}`);
-  const endDate = new Date(`${date}T${endTime}`);
+  const startDate = new Date(`${date}T${startTime}:00Z`);
+  const endDate = new Date(`${date}T${endTime}:00Z`);
   const newSlotInHours = (endDate - startDate) / 1000 / 60 / 60;
 
   const slotError = validateSlotHours(startDate, endDate);

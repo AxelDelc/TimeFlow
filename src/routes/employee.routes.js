@@ -27,12 +27,12 @@ router.post('/end', requireAuth, async (req, res) => {
 router.get('/schedule', requireAuth, async (req, res) => {
     const userId = req.session.user.id;
 
-    const weekStart = req.query.weekStart ? new Date(req.query.weekStart) : new Date();
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
-    weekStart.setHours(0, 0, 0, 0);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-    weekEnd.setHours(23, 59, 59, 999);
+    const dateStr = req.query.weekStart || new Date().toISOString().split('T')[0];
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+    const mondayOffset = dow === 0 ? -6 : 1 - dow;
+    const weekStart = new Date(Date.UTC(y, m - 1, d + mondayOffset));
+    const weekEnd = new Date(Date.UTC(y, m - 1, d + mondayOffset + 6, 23, 59, 59, 999));
 
     const timeSchedule = await prisma.scheduleSlot.findMany({
         where: { userId, date: { gte: weekStart, lte: weekEnd } },
