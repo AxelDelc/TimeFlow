@@ -1,11 +1,13 @@
 const prisma = require('../db/prisma');
 
 async function startSession(userId) {
+  const existing = await prisma.workSession.findFirst({
+    where: { userId, endTime: null },
+  });
+  if (existing) return null;
+
   return prisma.workSession.create({
-    data: {
-      userId,
-      startTime: new Date(),
-    },
+    data: { userId, startTime: new Date() },
   });
 }
 

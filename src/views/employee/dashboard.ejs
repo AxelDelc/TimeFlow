@@ -1,11 +1,13 @@
 <%- include('../layout/header', { pageTitle: 'Mon espace', currentPage: 'dashboard', user: user }) %>
 
+<% const hasActiveSession = sessions.some(s => !s.endTime); %>
+
 <div class="punch-grid punch-wrapper">
     <form method="POST" action="/employee/start">
-        <button class="punch-btn punch-in">Pointer entrée</button>
+        <button class="punch-btn punch-in" <%= hasActiveSession ? 'disabled' : '' %>>Pointer entrée</button>
     </form>
     <form method="POST" action="/employee/end">
-        <button class="punch-btn punch-out">Pointer sortie</button>
+        <button class="punch-btn punch-out" <%= !hasActiveSession ? 'disabled' : '' %>>Pointer sortie</button>
     </form>
 </div>
 
