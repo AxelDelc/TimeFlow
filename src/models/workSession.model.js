@@ -1,6 +1,6 @@
-const prisma = require('../db/prisma');
+const defaultPrisma = require('../db/prisma');
 
-async function startSession(userId) {
+async function startSession(userId, prisma = defaultPrisma) {
   const existing = await prisma.workSession.findFirst({
     where: { userId, endTime: null },
   });
@@ -11,14 +11,14 @@ async function startSession(userId) {
   });
 }
 
-async function getUserSessions(userId) {
+async function getUserSessions(userId, prisma = defaultPrisma) {
   return prisma.workSession.findMany({
     where: { userId },
     orderBy: { startTime: 'desc' },
   });
 }
 
-async function endSession(userId) {
+async function endSession(userId, prisma = defaultPrisma) {
   const session = await prisma.workSession.findFirst({
     where: { userId, endTime: null },
   });

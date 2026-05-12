@@ -1,4 +1,4 @@
-const prisma = require('../db/prisma');
+const defaultPrisma = require('../db/prisma');
 
 function validateSlotHours(startTime, endTime) {
   const startHour = startTime.getUTCHours() + startTime.getUTCMinutes() / 60;
@@ -25,29 +25,29 @@ function validateConsecutiveHours(startTime, endTime, maxHours) {
   return null;
 }
 
-async function validateWeeklyHours(userId, weekStart, weekEnd, newSlotDuration) {
-    const restrictions = await prisma.employeeRestrictions.findUnique({
-        where: { userId },
-    });
-    const weeklyTarget = restrictions ? restrictions.weeklyHoursTarget : 35;
+async function validateWeeklyHours(userId, weekStart, weekEnd, newSlotDuration, prisma = defaultPrisma) {
+  const restrictions = await prisma.employeeRestrictions.findUnique({
+    where: { userId },
+  });
+  const weeklyTarget = restrictions ? restrictions.weeklyHoursTarget : 35;
 
-    const slots = await prisma.scheduleSlot.findMany({
-        where: {
-            userId,
-            type: 'work',
-            date: { gte: weekStart, lte: weekEnd },
-        },
-    });
+  const slots = await prisma.scheduleSlot.findMany({
+    where: {
+      userId,
+      type: 'work',
+      date: { gte: weekStart, lte: weekEnd },
+    },
+  });
 
-    const existingHours = slots.reduce((sum, slot) => {
-        return sum + (slot.endTime - slot.startTime) / 1000 / 60 / 60;
-    }, 0);
+  const existingHours = slots.reduce((sum, slot) => {
+    return sum + (slot.endTime - slot.startTime) / 1000 / 60 / 60;
+  }, 0);
 
-    if (existingHours + newSlotDuration > weeklyTarget) {
-        return `L'employé ne peut pas dépasser ${weeklyTarget}h de travail par semaine.`;
-    }
+  if (existingHours + newSlotDuration > weeklyTarget) {
+    return `L'employé ne peut pas dépasser ${weeklyTarget}h de travail par semaine.`;
+  }
 
-    return null;
+  return null;
 }
 
 module.exports = {

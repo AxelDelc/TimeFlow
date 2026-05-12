@@ -5,11 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "postinstall": "prisma generate",
     "build:front": "vite build",
-    "dev:front": "vite build --watch"
+    "dev:front": "vite build --watch",
+    "lint": "eslint src tests",
+    "lint:fix": "eslint src tests --fix"
   },
   "repository": {
     "type": "git",
@@ -36,9 +40,14 @@
   "devDependencies": {
     "@playwright/test": "^1.59.1",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "eslint": "^10.3.0",
+    "eslint-plugin-svelte": "^3.17.1",
+    "globals": "^17.6.0",
     "nodemon": "^3.1.11",
+    "prettier": "3.8.3",
     "prisma": "^7.5.0",
     "svelte": "^5.55.5",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "vitest": "^4.1.6"
   }
 }

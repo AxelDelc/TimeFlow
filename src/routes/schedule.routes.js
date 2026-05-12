@@ -45,7 +45,7 @@ router.post("/schedule/:userId/slot", requireAdmin, async (req, res) => {
   const newSlotInHours = (endDate - startDate) / 1000 / 60 / 60;
 
   const slotError = validateSlotHours(startDate, endDate);
-  if (slotError != null) {
+  if (slotError !== null) {
     return res.status(400).json({ error: slotError });
   }
 
@@ -64,7 +64,7 @@ router.post("/schedule/:userId/slot", requireAdmin, async (req, res) => {
         endDate,
         maxHours,
       );
-      if (consecutiveError != null) {
+      if (consecutiveError !== null) {
         return res.status(400).json({ error: consecutiveError });
       }
       const weeklyError = await validateWeeklyHours(
@@ -73,7 +73,7 @@ router.post("/schedule/:userId/slot", requireAdmin, async (req, res) => {
         weekEnd,
         newSlotInHours,
       );
-      if (weeklyError != null) {
+      if (weeklyError !== null) {
         return res.status(400).json({ error: weeklyError });
       }
     }
@@ -137,7 +137,7 @@ router.delete("/schedule/slot/:slotId", requireAdmin, async (req, res) => {
   }
 });
 
-//Lister les heures supplémentaires d'un employé
+// Lister les heures supplémentaires d'un employé
 router.get("/schedule/:userId/overtime", requireAdmin, async (req, res) => {
   const userId = parseInt(req.params.userId);
   const overtimeEntrys = await prisma.overtimeDeclaration.findMany({
@@ -147,7 +147,7 @@ router.get("/schedule/:userId/overtime", requireAdmin, async (req, res) => {
   return res.json(overtimeEntrys);
 });
 
-//Déclarer une heure supplémentaire
+// Déclarer une heure supplémentaire
 router.post("/schedule/:userId/overtime", requireAdmin, async (req, res) => {
   const userId = parseInt(req.params.userId);
   const { date, startTime, endTime, reason, comment } = req.body;
@@ -169,67 +169,61 @@ router.post("/schedule/:userId/overtime", requireAdmin, async (req, res) => {
   }
 });
 
-
 // Supprimer une déclaration d'heure supplémentaire
 router.delete("/schedule/overtime/:overtimeId", requireAdmin, async (req, res) => {
-    const overtimeId = parseInt(req.params.overtimeId);
-    const overtimeEntry = await prisma.overtimeDeclaration.findUnique({
-      where: { id: overtimeId },
-    });
-    if (!overtimeEntry) {
-      return res.status(404).json({ error: "Déclaration d'heure supplémentaire non trouvée" });
-    }
-    try {
-      await prisma.overtimeDeclaration.delete({ where: { id: overtimeId } });
-      return res.json({ message: "Déclaration d'heure supplémentaire supprimée avec succès" });
-    } catch (error) {
-      console.error("Erreur lors de la suppression de la déclaration d'heure supplémentaire:", error);
-      return res.status(500).json({ error: "Erreur lors de la suppression de la déclaration d'heure supplémentaire" });
-    }
+  const overtimeId = parseInt(req.params.overtimeId);
+  const overtimeEntry = await prisma.overtimeDeclaration.findUnique({
+    where: { id: overtimeId },
+  });
+  if (!overtimeEntry) {
+    return res.status(404).json({ error: "Déclaration d'heure supplémentaire non trouvée" });
+  }
+  try {
+    await prisma.overtimeDeclaration.delete({ where: { id: overtimeId } });
+    return res.json({ message: "Déclaration d'heure supplémentaire supprimée avec succès" });
+  } catch (error) {
+    console.error("Erreur lors de la suppression de la déclaration d'heure supplémentaire:", error);
+    return res.status(500).json({ error: "Erreur lors de la suppression de la déclaration d'heure supplémentaire" });
+  }
 });
-
 
 // Récupérer les demandes de changement de planning
 router.get("/schedule/:userId/change-requests", requireAdmin, async (req, res) => {
-    const userId = parseInt(req.params.userId);
-    const requests = await prisma.scheduleChangeRequest.findMany({
-      where: { userId },
-        orderBy: { createdAt: "desc" },
-    });
-    return res.json(requests);
+  const userId = parseInt(req.params.userId);
+  const requests = await prisma.scheduleChangeRequest.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+  });
+  return res.json(requests);
 });
 
-
-//Accepter ou refuser une demande de changement de planning
+// Accepter ou refuser une demande de changement de planning
 router.put("/schedule/:requestId/change-requests", requireAdmin, async (req, res) => {
-    const requestId = parseInt(req.params.requestId);
-    const { status, adminMessage } = req.body;
-    try {      
-        const updatedRequest = await prisma.scheduleChangeRequest.update({
-        where: { id: requestId },
-        data: {
-          status,
-          adminMessage,
-        },
-      });
-        if (status === "approved") {
-            const originalSlot = await prisma.scheduleSlot.findUnique({ where: { id: updatedRequest.originalSlotId } });
-            if (originalSlot) {
-                await prisma.scheduleSlot.update({
-                    where: { id: updatedRequest.originalSlotId },
-                    data: {
-                        date: updatedRequest.newDate,
-                        startTime: updatedRequest.newStartTime,
-                        endTime: updatedRequest.newEndTime,
-                    },
-                });
-            }
-        }
-      return res.json(updatedRequest);
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour de la demande de changement de planning:", error);
-      return res.status(500).json({ error: "Erreur lors de la mise à jour de la demande de changement de planning" });
+  const requestId = parseInt(req.params.requestId);
+  const { status, adminMessage } = req.body;
+  try {
+    const updatedRequest = await prisma.scheduleChangeRequest.update({
+      where: { id: requestId },
+      data: { status, adminMessage },
+    });
+    if (status === "approved") {
+      const originalSlot = await prisma.scheduleSlot.findUnique({ where: { id: updatedRequest.originalSlotId } });
+      if (originalSlot) {
+        await prisma.scheduleSlot.update({
+          where: { id: updatedRequest.originalSlotId },
+          data: {
+            date: updatedRequest.newDate,
+            startTime: updatedRequest.newStartTime,
+            endTime: updatedRequest.newEndTime,
+          },
+        });
+      }
     }
+    return res.json(updatedRequest);
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de la demande de changement de planning:", error);
+    return res.status(500).json({ error: "Erreur lors de la mise à jour de la demande de changement de planning" });
+  }
 });
 
 module.exports = router;
