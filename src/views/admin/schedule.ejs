@@ -1,44 +1,5 @@
 <%- include('../layout/header', { pageTitle: 'Planning — ' + employee.name, currentPage: 'employees', user: user }) %>
 
-<%
-const HOUR_START = 7;
-const HOUR_END = 20;
-const HOUR_HEIGHT = 64;
-
-function utcDateStr(d) {
-    return d.getUTCFullYear() + '-' + String(d.getUTCMonth()+1).padStart(2,'0') + '-' + String(d.getUTCDate()).padStart(2,'0');
-}
-
-const prevWeek = new Date(weekStart); prevWeek.setUTCDate(weekStart.getUTCDate() - 7);
-const nextWeek = new Date(weekStart); nextWeek.setUTCDate(weekStart.getUTCDate() + 7);
-const weekEnd  = new Date(weekStart); weekEnd.setUTCDate(weekStart.getUTCDate() + 6);
-const prevWeekStr = utcDateStr(prevWeek);
-const nextWeekStr = utcDateStr(nextWeek);
-const weekLabel = weekStart.toLocaleDateString('fr-FR', { timeZone: 'UTC' }) + ' – ' + weekEnd.toLocaleDateString('fr-FR', { timeZone: 'UTC' });
-const todayStr = utcDateStr(new Date());
-
-const days = [];
-for (let i = 0; i < 7; i++) {
-    const d = new Date(weekStart);
-    d.setUTCDate(weekStart.getUTCDate() + i);
-    days.push(d);
-}
-
-const slotsByDay = {};
-days.forEach(d => { slotsByDay[utcDateStr(d)] = []; });
-timeSchedule.forEach(slot => {
-    const key = utcDateStr(new Date(slot.date));
-    if (slotsByDay[key]) slotsByDay[key].push(slot);
-});
-%>
-
-<div id="schedule-data"
-    data-employee-id="<%= employee.id %>"
-    data-hour-start="<%= HOUR_START %>"
-    data-hour-height="<%= HOUR_HEIGHT %>"
-    style="display:none">
-</div>
-
 <div class="mb-4">
     <a href="/admin/employees" class="btn btn-ghost btn-sm">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
@@ -63,146 +24,17 @@ timeSchedule.forEach(slot => {
     </div>
 </div>
 
-<div class="card card--mb">
-    <div class="card-header">
-        <a href="/admin/schedule/<%= employee.id %>?weekStart=<%= prevWeekStr %>" class="btn btn-ghost btn-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-            Précédente
-        </a>
-        <span class="card-title">Semaine du <%= weekLabel %></span>
-        <a href="/admin/schedule/<%= employee.id %>?weekStart=<%= nextWeekStr %>" class="btn btn-ghost btn-sm">
-            Suivante
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        </a>
-    </div>
+<script id="calendar-admin-data" type="application/json">
+    <%- JSON.stringify({
+        employeeId: employee.id,
+        weekStart: weekStart.toISOString().split('T')[0],
+        slots: timeSchedule,
+        restrictions: restrictions || null
+    }) %>
+</script>
 
-    <div class="sc-calendar">
-        <div class="sc-header">
-            <div></div>
-            <% days.forEach(day => { %>
-            <div class="sc-day-header <%= utcDateStr(day) === todayStr ? 'today' : '' %>">
-                <%= day.toLocaleDateString('fr-FR', { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }) %>
-            </div>
-            <% }) %>
-        </div>
-        <div class="sc-body">
-            <div class="sc-time-col">
-                <% for (let h = HOUR_START; h <= HOUR_END; h++) { %>
-                <div class="sc-hour-label" style="height:<%= HOUR_HEIGHT %>px"><%= String(h).padStart(2,'0') %>h</div>
-                <% } %>
-            </div>
-            <% days.forEach(day => { %>
-            <div class="sc-day-col"
-                data-date="<%= utcDateStr(day) %>"
-                style="height:<%= (HOUR_END - HOUR_START) * HOUR_HEIGHT %>px">
-                <% for (let h = 0; h < (HOUR_END - HOUR_START); h++) { %>
-                <div class="sc-grid-line" style="top:<%= h * HOUR_HEIGHT %>px"></div>
-                <% } %>
-                <% slotsByDay[utcDateStr(day)].forEach(slot => {
-                    const s = new Date(slot.startTime);
-                    const e = new Date(slot.endTime);
-                    const top = (s.getUTCHours() + s.getUTCMinutes()/60 - HOUR_START) * HOUR_HEIGHT;
-                    const height = Math.max((e.getUTCHours() + e.getUTCMinutes()/60 - s.getUTCHours() - s.getUTCMinutes()/60) * HOUR_HEIGHT, 20);
-                    const startStr = s.toLocaleTimeString('fr-FR', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
-                    const endStr = e.toLocaleTimeString('fr-FR', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
-                %>
-                <div class="sc-slot sc-slot--<%= slot.type %>"
-                    style="top:<%= top %>px;height:<%= height %>px"
-                    data-slot-id="<%= slot.id %>"
-                    data-start="<%= startStr %>"
-                    data-end="<%= endStr %>"
-                    data-type="<%= slot.type %>"
-                    data-date="<%= utcDateStr(new Date(slot.date)) %>">
-                    <span class="sc-slot-time"><%= startStr %> – <%= endStr %></span>
-                    <span class="sc-slot-label"><%= slot.type === 'work' ? 'Travail' : 'Pause' %></span>
-                </div>
-                <% }) %>
-            </div>
-            <% }) %>
-        </div>
-    </div>
-</div>
+<div id="calendar-admin"></div>
 
-<div class="card">
-    <div class="card-header">
-        <span class="card-title">Contraintes</span>
-    </div>
-    <div class="card-body">
-        <form id="restrictions-form" style="display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:12px;align-items:end">
-            <div class="form-group" style="margin:0">
-                <label class="form-label">Heures hebdo cibles</label>
-                <input type="number" name="weeklyHoursTarget" class="form-input" min="1" max="48" step="0.5"
-                    value="<%= restrictions ? restrictions.weeklyHoursTarget : 35 %>">
-            </div>
-            <div class="form-group" style="margin:0">
-                <label class="form-label">Heures consécutives max</label>
-                <input type="number" name="maxConsecutiveHours" class="form-input" min="1" max="12" step="0.5"
-                    value="<%= restrictions ? restrictions.maxConsecutiveHours : 8 %>">
-            </div>
-            <div class="form-group" style="margin:0">
-                <label class="form-label">Notes</label>
-                <input type="text" name="notes" class="form-input"
-                    value="<%= restrictions ? (restrictions.notes || '') : '' %>">
-            </div>
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </form>
-    </div>
-</div>
-
-<!-- Modale : nouveau créneau -->
-<dialog id="modal-add">
-    <div class="modal-header">
-        <span class="modal-title">Nouveau créneau</span>
-        <button class="modal-close" onclick="document.getElementById('modal-add').close()">×</button>
-    </div>
-    <div class="modal-body">
-        <div id="slot-error" class="alert alert-error" style="display:none"></div>
-        <form id="add-slot-form">
-            <input type="hidden" name="date" id="new-slot-date">
-            <div class="form-group">
-                <label class="form-label">Date</label>
-                <input type="text" id="new-slot-date-display" class="form-input" disabled>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Début</label>
-                    <input type="time" name="startTime" id="new-slot-start" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Fin</label>
-                    <input type="time" name="endTime" id="new-slot-end" class="form-input" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Type</label>
-                <select name="type" class="form-input">
-                    <option value="work">Travail</option>
-                    <option value="break">Pause</option>
-                </select>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-ghost" onclick="document.getElementById('modal-add').close()">Annuler</button>
-        <button class="btn btn-primary" id="btn-add-slot">Ajouter</button>
-    </div>
-</dialog>
-
-<!-- Modale : détail créneau -->
-<dialog id="modal-slot">
-    <div class="modal-header">
-        <span class="modal-title" id="modal-slot-title">Créneau</span>
-        <button class="modal-close" onclick="document.getElementById('modal-slot').close()">×</button>
-    </div>
-    <div class="modal-body">
-        <p id="modal-slot-info" style="color:#475569;font-size:14px;margin-bottom:4px"></p>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-ghost" onclick="document.getElementById('modal-slot').close()">Fermer</button>
-        <button class="btn btn-danger" id="btn-delete-slot">Supprimer</button>
-    </div>
-</dialog>
-
-<script src="/js/admin-schedule.js"></script>
+<script src="/dist/bundle.js" type="module"></script>
 
 <%- include('../layout/footer') %>

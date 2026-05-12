@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "build:front": "vite build",
+    "dev:front": "vite build --watch"
   },
   "repository": {
     "type": "git",
@@ -33,7 +35,10 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "nodemon": "^3.1.11",
-    "prisma": "^7.5.0"
+    "prisma": "^7.5.0",
+    "svelte": "^5.55.5",
+    "vite": "^8.0.12"
   }
 }
