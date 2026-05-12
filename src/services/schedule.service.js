@@ -5,11 +5,11 @@ function validateSlotHours(startTime, endTime) {
   const endHour = endTime.getUTCHours() + endTime.getUTCMinutes() / 60;
 
   if (startHour < 7) {
-    return "Le créneau ne peut pas commencer avant 07:00.";
+    return 'Le créneau ne peut pas commencer avant 07:00.';
   }
 
   if (endHour > 20) {
-    return "Le créneau ne peut pas se terminer après 20:00.";
+    return 'Le créneau ne peut pas se terminer après 20:00.';
   }
 
   return null;
@@ -25,7 +25,13 @@ function validateConsecutiveHours(startTime, endTime, maxHours) {
   return null;
 }
 
-async function validateWeeklyHours(userId, weekStart, weekEnd, newSlotDuration, prisma = defaultPrisma) {
+async function validateWeeklyHours(
+  userId,
+  weekStart,
+  weekEnd,
+  newSlotDuration,
+  prisma = defaultPrisma
+) {
   const restrictions = await prisma.employeeRestrictions.findUnique({
     where: { userId },
   });

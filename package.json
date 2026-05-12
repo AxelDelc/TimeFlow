@@ -13,7 +13,9 @@
     "build:front": "vite build",
     "dev:front": "vite build --watch",
     "lint": "eslint src tests",
-    "lint:fix": "eslint src tests --fix"
+    "lint:fix": "eslint src tests --fix",
+    "format": "prettier --write \"src/**/*.{js,svelte}\" \"tests/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.{js,svelte}\" \"tests/**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -41,10 +43,12 @@
     "@playwright/test": "^1.59.1",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.17.1",
     "globals": "^17.6.0",
     "nodemon": "^3.1.11",
     "prettier": "3.8.3",
+    "prettier-plugin-svelte": "^3.5.2",
     "prisma": "^7.5.0",
     "svelte": "^5.55.5",
     "vite": "^8.0.12",

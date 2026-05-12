@@ -18,11 +18,11 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(
-    session({
-        secret: process.env.SESSION_SECRET || 'dev-secret-change-later',
-        resave: false,
-        saveUninitialized: false
-    })
+  session({
+    secret: process.env.SESSION_SECRET || 'dev-secret-change-later',
+    resave: false,
+    saveUninitialized: false,
+  })
 );
 
 // Route auth
@@ -38,7 +38,7 @@ app.use('/employee', employeeRoutes);
 app.use('/admin', scheduleRoutes);
 
 app.get('/', (req, res) => {
-    res.render('home');
+  res.render('home');
 });
 
 module.exports = app;

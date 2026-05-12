@@ -3,9 +3,9 @@ const { startSession, endSession, getUserSessions } = require('../../src/models/
 const mockPrisma = {
   workSession: {
     findFirst: vi.fn(),
-    create:    vi.fn(),
-    update:    vi.fn(),
-    findMany:  vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    findMany: vi.fn(),
   },
 };
 
@@ -14,19 +14,31 @@ beforeEach(() => vi.clearAllMocks());
 // startSession
 
 describe('startSession', () => {
-  it('crée une session si aucune n\'est active', async () => {
+  it("crée une session si aucune n'est active", async () => {
     mockPrisma.workSession.findFirst.mockResolvedValue(null);
-    mockPrisma.workSession.create.mockResolvedValue({ id: 1, userId: 42, startTime: new Date(), endTime: null });
+    mockPrisma.workSession.create.mockResolvedValue({
+      id: 1,
+      userId: 42,
+      startTime: new Date(),
+      endTime: null,
+    });
 
     const result = await startSession(42, mockPrisma);
 
-    expect(mockPrisma.workSession.findFirst).toHaveBeenCalledWith({ where: { userId: 42, endTime: null } });
+    expect(mockPrisma.workSession.findFirst).toHaveBeenCalledWith({
+      where: { userId: 42, endTime: null },
+    });
     expect(mockPrisma.workSession.create).toHaveBeenCalled();
     expect(result).not.toBeNull();
   });
 
-  it('retourne null et n\'appelle pas create si une session est déjà active', async () => {
-    mockPrisma.workSession.findFirst.mockResolvedValue({ id: 1, userId: 42, startTime: new Date(), endTime: null });
+  it("retourne null et n'appelle pas create si une session est déjà active", async () => {
+    mockPrisma.workSession.findFirst.mockResolvedValue({
+      id: 1,
+      userId: 42,
+      startTime: new Date(),
+      endTime: null,
+    });
 
     const result = await startSession(42, mockPrisma);
 
@@ -52,7 +64,7 @@ describe('endSession', () => {
     expect(result.endTime).toBeInstanceOf(Date);
   });
 
-  it('retourne null et n\'appelle pas update si aucune session n\'est active', async () => {
+  it("retourne null et n'appelle pas update si aucune session n'est active", async () => {
     mockPrisma.workSession.findFirst.mockResolvedValue(null);
 
     const result = await endSession(42, mockPrisma);
@@ -81,7 +93,7 @@ describe('getUserSessions', () => {
     expect(result).toEqual(sessions);
   });
 
-  it('retourne un tableau vide si l\'utilisateur n\'a aucune session', async () => {
+  it("retourne un tableau vide si l'utilisateur n'a aucune session", async () => {
     mockPrisma.workSession.findMany.mockResolvedValue([]);
 
     const result = await getUserSessions(99, mockPrisma);

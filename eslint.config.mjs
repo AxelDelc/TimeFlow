@@ -1,6 +1,7 @@
 import globals from "globals";
 import { defineConfig } from "eslint/config";
 import pluginSvelte from "eslint-plugin-svelte";
+import configPrettier from "eslint-config-prettier";
 
 export default defineConfig([
   // Fichiers ignorés
@@ -89,4 +90,7 @@ export default defineConfig([
       sourceType: "module",
     },
   },
+
+  // Désactive les règles ESLint qui conflictuent avec Prettier (toujours en dernier)
+  configPrettier,
 ]);
