@@ -58,5 +58,20 @@
     <div class="main-wrapper">
         <header class="top-bar">
             <h1 class="page-title"><%= pageTitle %></h1>
+            <% if (typeof dashboardStats !== 'undefined' && dashboardStats) { %>
+            <div class="top-bar-actions">
+                <div class="presence-pill">
+                    <span class="presence-dot"></span>
+                    <%= dashboardStats.currentlyIn %> présent<%= dashboardStats.currentlyIn !== 1 ? 's' : '' %>
+                </div>
+                <a href="/admin/sessions" class="btn btn-ghost btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Tous les pointages
+                </a>
+            </div>
+            <% } %>
+            <% if (typeof employeeDate !== 'undefined' && employeeDate) { %>
+            <span class="topbar-date"><%= employeeDate %></span>
+            <% } %>
         </header>
         <main class="content">

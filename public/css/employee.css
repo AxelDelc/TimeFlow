@@ -1,25 +1,167 @@
 /* ===== ESPACE SALARIÉ ===== */
-.punch-wrapper  { max-width: 480px; }
-.sessions-card  { max-width: 700px; }
 
-.punch-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 24px;
+.punch-wrapper {
+  max-width: 480px;
 }
 
-.punch-btn {
-    padding: 16px;
-    border-radius: 10px;
-    border: none;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.15s;
-    width: 100%;
+.sessions-card {
+  max-width: 700px;
 }
 
-.punch-btn:hover { opacity: 0.88; }
-.punch-in        { background: #22c55e; color: #fff; }
-.punch-out       { background: #ef4444; color: #fff; }
+/* Punch card ------------------------------------------------- */
+
+.punch-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-card);
+  margin-bottom: var(--space-6);
+}
+
+.punch-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 10px var(--space-5);
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-page);
+  border-bottom: 1px solid var(--color-border);
+  letter-spacing: 0.2px;
+}
+
+.punch-status--active {
+  background: var(--color-active-light);
+  border-bottom-color: oklch(88% 0.06 145);
+  color: var(--color-active-text);
+}
+
+.punch-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--color-text-subtle);
+}
+
+.punch-status--active .punch-status-dot {
+  background: var(--color-active);
+}
+
+.punch-actions {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.punch-primary-form,
+.punch-secondary-form {
+  display: block;
+}
+
+/* Primary: full-width, large, tactile */
+.punch-btn--primary {
+  display: block;
+  width: 100%;
+  padding: 18px var(--space-5);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-title);
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  letter-spacing: -0.1px;
+  transition: opacity 0.12s ease-out;
+}
+
+.punch-btn--primary:hover {
+  opacity: 0.88;
+}
+
+.punch-btn--primary:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 2px;
+}
+
+/* Texte sombre sur fond coloré saturé — WCAG AA garanti */
+.punch-in {
+  background: var(--color-active);
+  color: var(--color-text);
+}
+
+.punch-out {
+  background: var(--color-end);
+  color: var(--color-text);
+}
+
+/* Secondary: muted, compact, clearly unavailable */
+.punch-btn--secondary {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-body);
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: not-allowed;
+  background: transparent;
+  color: var(--color-text-subtle);
+  opacity: 0.55;
+}
+
+/* Sessions table -------------------------------------------- */
+
+.sessions-row-active td {
+  background: var(--color-active-light);
+}
+
+/* Top bar date (employee view) ------------------------------ */
+
+.topbar-date {
+  font-size: var(--text-label);
+  color: var(--color-text-muted);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  text-transform: capitalize;
+}
+
+/* Liste des salariés (admin) --------------------------------- */
+
+.employees-table td,
+.employees-table th {
+  padding-block: 10px;
+}
+
+.employees-table .col-actions {
+  text-align: right;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+.actions-sep {
+  width: 1px;
+  height: 14px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+.employee-row-inactive {
+  background: var(--color-page);
+}
+
+.employee-row-inactive .user-avatar {
+  opacity: 0.45;
+}
+
+.employee-row-inactive strong {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}

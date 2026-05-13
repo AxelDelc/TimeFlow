@@ -1,14 +1,35 @@
-<%- include('../layout/header', { pageTitle: 'Mon espace', currentPage: 'dashboard', user: user }) %>
+<%- include('../layout/header', { pageTitle: 'Mon espace', currentPage: 'dashboard', user: user, employeeDate: employeeDate }) %>
 
-<% const hasActiveSession = sessions.some(s => !s.endTime); %>
+<% const activeSession = sessions.find(s => !s.endTime); %>
 
-<div class="punch-grid punch-wrapper">
-    <form method="POST" action="/employee/start">
-        <button class="punch-btn punch-in" <%= hasActiveSession ? 'disabled' : '' %>>Pointer entrée</button>
-    </form>
-    <form method="POST" action="/employee/end">
-        <button class="punch-btn punch-out" <%= !hasActiveSession ? 'disabled' : '' %>>Pointer sortie</button>
-    </form>
+<div class="punch-wrapper">
+    <div class="punch-card">
+        <div class="punch-status<%= activeSession ? ' punch-status--active' : '' %>">
+            <span class="punch-status-dot"></span>
+            <% if (activeSession) { %>
+                En cours &middot; pointé à <%= activeSession.startTimeFormatted %>
+            <% } else { %>
+                Aucune session active
+            <% } %>
+        </div>
+        <div class="punch-actions">
+            <% if (!activeSession) { %>
+                <form method="POST" action="/employee/start" class="punch-primary-form">
+                    <button class="punch-btn--primary punch-in">Pointer entrée</button>
+                </form>
+                <form method="POST" action="/employee/end" class="punch-secondary-form">
+                    <button class="punch-btn--secondary" disabled>Pointer sortie</button>
+                </form>
+            <% } else { %>
+                <form method="POST" action="/employee/end" class="punch-primary-form">
+                    <button class="punch-btn--primary punch-out">Pointer sortie</button>
+                </form>
+                <form method="POST" action="/employee/start" class="punch-secondary-form">
+                    <button class="punch-btn--secondary" disabled>Pointer entrée</button>
+                </form>
+            <% } %>
+        </div>
+    </div>
 </div>
 
 <div class="card sessions-card">
@@ -19,8 +40,8 @@
         <table>
             <thead>
                 <tr>
-                    <th>Entrée</th>
-                    <th>Sortie</th>
+                    <th class="col-time">Entrée</th>
+                    <th class="col-time">Sortie</th>
                     <th>Statut</th>
                 </tr>
             </thead>
@@ -29,9 +50,9 @@
                     <tr><td colspan="3" class="empty-state">Aucun pointage enregistré</td></tr>
                 <% } %>
                 <% sessions.forEach(s => { %>
-                    <tr>
-                        <td><%= s.startTime %></td>
-                        <td><%= s.endTime || '—' %></td>
+                    <tr<%= !s.endTime ? ' class="sessions-row-active"' : '' %>>
+                        <td class="col-time"><%= s.startTimeFormatted %></td>
+                        <td class="col-time"><%= s.endTimeFormatted || '—' %></td>
                         <td>
                             <% if (!s.endTime) { %>
                                 <span class="badge badge-green"><span class="badge-dot"></span>En cours</span>

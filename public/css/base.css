@@ -1,19 +1,187 @@
-/* ===== RESET ===== */
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+:root {
+  /* ===========================================
+     PRIMITIVE TOKENS
+     Raw color values — never use directly in
+     components. Compose via semantic tokens.
+     =========================================== */
+
+  /* Signal blue — deeper indigo, not Tailwind default */
+  --prim-signal-300: oklch(72% 0.17 255);
+  --prim-signal-500: oklch(55% 0.23 255);
+  --prim-signal-600: oklch(47% 0.22 255);
+  --prim-signal-50:  oklch(96% 0.018 258);
+  --prim-signal-100: oklch(91% 0.04 257);
+
+  /* Active green (punch-in, sessions en cours) */
+  --prim-active-500: oklch(67% 0.19 145);
+  --prim-active-50:  oklch(96% 0.04 145);
+  --prim-active-700: oklch(40% 0.14 145);
+
+  /* End red (punch-out, erreurs, destructif) */
+  --prim-end-500: oklch(60% 0.22 24);
+  --prim-end-50:  oklch(96.5% 0.035 22);
+  --prim-end-700: oklch(38% 0.17 24);
+
+  /* Attention orange (heures supp, à surveiller) */
+  --prim-attn-500: oklch(68% 0.185 50);
+  --prim-attn-50:  oklch(96% 0.045 65);
+  --prim-attn-700: oklch(44% 0.14 50);
+
+  /* Break yellow (créneaux pause uniquement) */
+  --prim-break-500: oklch(80% 0.155 90);
+  --prim-break-50:  oklch(97% 0.04 95);
+  --prim-break-700: oklch(37% 0.10 75);
+
+  /* Neutrals — léger tint indigo (hue 262) pour cohérence palette */
+  --prim-n-950: oklch(13% 0.018 260);   /* sidebar bg */
+  --prim-n-920: oklch(22% 0.015 260);   /* active sidebar item bg */
+  --prim-n-900: oklch(18% 0.014 262);   /* text primary */
+  --prim-n-700: oklch(35% 0.013 262);   /* texte sur fond sombre */
+  --prim-n-500: oklch(44% 0.012 262);   /* text muted */
+  --prim-n-400: oklch(48% 0.010 262);   /* text subtle / placeholder */
+  --prim-n-200: oklch(90% 0.008 262);   /* border */
+  --prim-n-100: oklch(94% 0.007 262);   /* row separator */
+  --prim-n-50:  oklch(96.5% 0.006 262); /* page surface */
+  --prim-n-20:  oklch(99% 0.002 262);   /* card surface */
+
+  /* On-dark (textes sur sidebar sombre) */
+  --prim-on-dark-high: oklch(96% 0.004 262);
+  --prim-on-dark-mid:  oklch(65% 0.009 262);
+
+  /* ===========================================
+     SEMANTIC TOKENS
+     Nommés par rôle, pas par valeur.
+     =========================================== */
+
+  --color-signal:        var(--prim-signal-500);
+  --color-signal-hover:  var(--prim-signal-600);
+  --color-signal-light:  var(--prim-signal-50);
+  --color-signal-mid:    var(--prim-signal-100);
+  --color-signal-on-dark: var(--prim-signal-300);
+
+  --color-active:        var(--prim-active-500);
+  --color-active-light:  var(--prim-active-50);
+  --color-active-text:   var(--prim-active-700);
+
+  --color-end:           var(--prim-end-500);
+  --color-end-light:     var(--prim-end-50);
+  --color-end-text:      var(--prim-end-700);
+
+  --color-attention:     var(--prim-attn-500);
+  --color-attention-light: var(--prim-attn-50);
+  --color-attention-text: var(--prim-attn-700);
+
+  --color-break:         var(--prim-break-500);
+  --color-break-light:   var(--prim-break-50);
+  --color-break-text:    var(--prim-break-700);
+
+  --color-sidebar:         var(--prim-n-950);
+  --color-sidebar-active:  var(--prim-n-920);
+  --color-text:            var(--prim-n-900);
+  --color-text-muted:      var(--prim-n-500);
+  --color-text-subtle:     var(--prim-n-400);
+  --color-page:            var(--prim-n-50);
+  --color-card:            var(--prim-n-20);
+  --color-border:          var(--prim-n-200);
+  --color-row:             var(--prim-n-100);
+
+  --color-on-dark:         var(--prim-on-dark-high);
+  --color-on-dark-muted:   var(--prim-on-dark-mid);
+
+  /* Aliases legacy — permettent aux composants
+     existants de fonctionner sans modification HTML */
+  --white:         var(--prim-n-20);
+  --blue:          var(--prim-signal-500);
+  --blue-hover:    var(--prim-signal-600);
+  --blue-light:    var(--prim-signal-50);
+  --blue-mid:      var(--prim-signal-100);
+  --green:         var(--prim-active-500);
+  --green-light:   var(--prim-active-50);
+  --green-dark:    var(--prim-active-700);
+  --red:           var(--prim-end-500);
+  --red-light:     var(--prim-end-50);
+  --red-dark:      var(--prim-end-700);
+  --orange:        var(--prim-attn-500);
+  --orange-light:  var(--prim-attn-50);
+  --orange-dark:   var(--prim-attn-700);
+  --yellow:        var(--prim-break-500);
+  --yellow-light:  var(--prim-break-50);
+  --yellow-dark:   var(--prim-break-700);
+  --slate-900:     var(--prim-n-900);
+  --slate-800:     oklch(24% 0.013 262);
+  --slate-700:     oklch(32% 0.013 262);
+  --slate-600:     oklch(42% 0.012 262);
+  --slate-500:     var(--prim-n-500);
+  --slate-400:     var(--prim-n-400);
+  --slate-300:     oklch(80% 0.008 262);
+  --slate-200:     var(--prim-n-200);
+  --slate-100:     var(--prim-n-100);
+  --slate-50:      var(--prim-n-50);
+
+  /* ===========================================
+     TYPOGRAPHY
+     =========================================== */
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --text-display:  48px;
+  --text-headline: 26px;
+  --text-title:    18px;
+  --text-body:     14px;
+  --text-label:    12px;
+
+  /* ===========================================
+     SPACING (base 4px)
+     =========================================== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 40px;
+
+  /* ===========================================
+     RADIUS — resserré vers le bas pour précision
+     =========================================== */
+  --radius-sm:   5px;
+  --radius-md:   6px;
+  --radius-lg:   10px;
+  --radius-pill: 999px;
+
+  /* ===========================================
+     SHADOWS
+     =========================================== */
+  --shadow-modal: 0 24px 64px oklch(5% 0.02 260 / 0.22),
+                  0 4px 16px  oklch(5% 0.02 260 / 0.10);
+  --shadow-hover: 0 4px 12px  oklch(5% 0.02 260 / 0.08);
+  --shadow-focus: 0 0 0 3px   oklch(55% 0.23 255 / 0.18);
 }
 
-/* ===== BASE ===== */
+/* ===========================================
+   RESET
+   =========================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===========================================
+   BASE
+   =========================================== */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 14px;
-    color: #1e293b;
-    background: #f1f5f9;
+  font-family: var(--font);
+  font-size: var(--text-body);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-page);
 }
 
 a {
-    text-decoration: none;
-    color: inherit;
+  text-decoration: none;
+  color: inherit;
 }

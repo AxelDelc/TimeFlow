@@ -2,6 +2,8 @@ const express = require('express');
 const { requireAdmin } = require('../middlewares/auth.middleware');
 const prisma = require('../db/prisma');
 const bcrypt = require('bcrypt');
+const moment = require('moment');
+moment.locale('fr');
 
 const router = express.Router();
 
@@ -32,11 +34,20 @@ router.get('/', requireAdmin, async (req, res) => {
     orderBy: { startTime: 'desc' },
   });
 
+  const fmt = (d) => (d ? moment(d).format('DD/MM à HH[h]mm') : '—');
+
   res.render('admin/dashboard', {
     user: req.session.user,
     stats: { totalEmployees, activeEmployees, sessionsToday, currentlyIn },
-    recentSessions,
-    activeNow,
+    recentSessions: recentSessions.map(s => ({
+      ...s,
+      startTime: fmt(s.startTime),
+      endTime:   fmt(s.endTime),
+    })),
+    activeNow: activeNow.map(s => ({
+      ...s,
+      startTime: moment(s.startTime).format('HH[h]mm'),
+    })),
   });
 });
 
@@ -94,10 +105,16 @@ router.get('/employees/:id/sessions', requireAdmin, async (req, res) => {
   if (!employee) return res.status(404).send('Salarié introuvable');
 
   // findMany() : récupère tous les pointages de cet employé
-  const sessions = await prisma.workSession.findMany({
+  const raw = await prisma.workSession.findMany({
     where: { userId: id },
     orderBy: { startTime: 'desc' },
   });
+
+  const sessions = raw.map(s => ({
+    ...s,
+    startTime: moment(s.startTime).format('DD/MM/YYYY à HH[h]mm'),
+    endTime:   s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : '—',
+  }));
 
   res.render('admin/employee-sessions', { employee, sessions, user: req.session.user });
 });
@@ -125,11 +142,17 @@ router.post('/employees/:id/enable', requireAdmin, async (req, res) => {
 // Tous les pointages
 router.get('/sessions', requireAdmin, async (_req, res) => {
   // findMany() avec take : limite les résultats à 200 lignes (équivalent SQL LIMIT)
-  const sessions = await prisma.workSession.findMany({
+  const raw = await prisma.workSession.findMany({
     include: { user: true },
     orderBy: { startTime: 'desc' },
     take: 200,
   });
+
+  const sessions = raw.map(s => ({
+    ...s,
+    startTime: moment(s.startTime).format('DD/MM/YYYY à HH[h]mm'),
+    endTime:   s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : '—',
+  }));
 
   res.render('admin/sessions', { sessions, user: _req.session.user });
 });

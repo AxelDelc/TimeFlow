@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-12T00:00:00.000Z",
+  "title": "Design System: TimeFlow",
+  "extensions": {
+    "colorMeta": {
+      "signal-blue":     { "role": "primary",   "displayName": "Signal Blue",      "canonical": "#3b82f6", "tonalRamp": ["#0d1b3e", "#1a3a7a", "#1d4ed8", "#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#dbeafe"] },
+      "punch-green":     { "role": "secondary",  "displayName": "Punch-In Green",   "canonical": "#22c55e", "tonalRamp": ["#052e16", "#14532d", "#166534", "#15803d", "#22c55e", "#4ade80", "#86efac", "#dcfce7"] },
+      "punch-red":       { "role": "secondary",  "displayName": "Punch-Out Red",    "canonical": "#ef4444", "tonalRamp": ["#450a0a", "#7f1d1d", "#991b1b", "#b91c1c", "#ef4444", "#f87171", "#fca5a5", "#fee2e2"] },
+      "overtime-orange": { "role": "tertiary",   "displayName": "Overtime Orange",  "canonical": "#f97316", "tonalRamp": ["#431407", "#7c2d12", "#9a3412", "#c2410c", "#f97316", "#fb923c", "#fdba74", "#ffedd5"] },
+      "break-yellow":    { "role": "tertiary",   "displayName": "Break Yellow",     "canonical": "#eab308", "tonalRamp": ["#422006", "#713f12", "#854d0e", "#a16207", "#eab308", "#facc15", "#fde047", "#fef9c3"] },
+      "sidebar-slate":   { "role": "neutral",    "displayName": "Sidebar Slate",    "canonical": "#0f172a", "tonalRamp": ["#020408", "#0a0f1a", "#0f172a", "#1e293b", "#334155", "#475569", "#94a3b8", "#f8fafc"] },
+      "text-primary":    { "role": "neutral",    "displayName": "Text Primary",     "canonical": "#1e293b", "tonalRamp": ["#0a0f1a", "#0f172a", "#1e293b", "#334155", "#475569", "#64748b", "#94a3b8", "#f1f5f9"] },
+      "text-muted":      { "role": "neutral",    "displayName": "Text Muted",       "canonical": "#64748b", "tonalRamp": ["#0f172a", "#1e293b", "#334155", "#475569", "#64748b", "#94a3b8", "#cbd5e1", "#f8fafc"] },
+      "text-subtle":     { "role": "neutral",    "displayName": "Text Subtle",      "canonical": "#94a3b8", "tonalRamp": ["#1e293b", "#334155", "#475569", "#64748b", "#94a3b8", "#cbd5e1", "#e2e8f0", "#f8fafc"] },
+      "surface-page":    { "role": "neutral",    "displayName": "Surface Page",     "canonical": "#f1f5f9", "tonalRamp": ["#0f172a", "#1e293b", "#334155", "#94a3b8", "#cbd5e1", "#e2e8f0", "#f1f5f9", "#ffffff"] },
+      "surface-card":    { "role": "neutral",    "displayName": "Surface Card",     "canonical": "#ffffff", "tonalRamp": ["#0f172a", "#1e293b", "#94a3b8", "#cbd5e1", "#e2e8f0", "#f1f5f9", "#f8fafc", "#ffffff"] },
+      "border-hairline": { "role": "neutral",    "displayName": "Border Hairline",  "canonical": "#e2e8f0", "tonalRamp": ["#1e293b", "#334155", "#475569", "#94a3b8", "#cbd5e1", "#e2e8f0", "#f1f5f9", "#ffffff"] }
+    },
+    "typographyMeta": {
+      "display":  { "displayName": "Display",  "purpose": "Page d'accueil hero uniquement. Jamais dans l'app interne." },
+      "headline": { "displayName": "Headline", "purpose": "Valeurs de statistiques clés dans les dashboards." },
+      "title":    { "displayName": "Title",    "purpose": "Titres de pages et sections majeures." },
+      "body":     { "displayName": "Body",     "purpose": "Contenu principal : tableaux, formulaires, descriptions." },
+      "label":    { "displayName": "Label",    "purpose": "Badges, étiquettes de champs, légendes de calendrier." }
+    },
+    "shadows": [
+      { "name": "modal",       "value": "0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)", "purpose": "Modales et dialogs. Ombre forte pour signaler un plan supérieur." },
+      { "name": "card-hover",  "value": "0 4px 12px rgba(0,0,0,0.08)",                               "purpose": "Cards interactives au hover. Léger soulèvement." },
+      { "name": "input-focus", "value": "0 0 0 3px rgba(59,130,246,0.15)",                           "purpose": "Focus ring sur inputs et selects. Signal Blue à 15% d'opacité." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Éasing standard pour les transitions d'état." },
+      { "name": "duration-fast", "value": "150ms",                         "purpose": "Transitions de boutons, hover, focus." },
+      { "name": "duration-base", "value": "200ms",                         "purpose": "Transitions de modales, menus déroulants." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "768px",  "purpose": "Breakpoint principal mobile : sidebar collapse, grids 1 colonne." },
+      { "name": "tablet", "value": "900px",  "purpose": "Breakpoint tablette pour le calendrier." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Action principale. Fond Signal Blue, toujours visible sur fond clair.",
+      "html": "<button class=\"ds-btn-primary\">Enregistrer</button>",
+      "css": ".ds-btn-primary { background: #3b82f6; color: #ffffff; padding: 8px 16px; border: none; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; cursor: pointer; transition: background 150ms cubic-bezier(0.4,0,0.2,1); outline-offset: 2px; } .ds-btn-primary:hover { background: #2563eb; } .ds-btn-primary:focus-visible { outline: 2px solid #3b82f6; background: #2563eb; } .ds-btn-primary:active { background: #1d4ed8; }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Action destructive. Fond rouge clair, texte rouge foncé — visible sans agressivité.",
+      "html": "<button class=\"ds-btn-danger\">Supprimer</button>",
+      "css": ".ds-btn-danger { background: #fee2e2; color: #dc2626; padding: 8px 16px; border: none; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; cursor: pointer; transition: background 150ms cubic-bezier(0.4,0,0.2,1); outline-offset: 2px; } .ds-btn-danger:hover { background: #fca5a5; } .ds-btn-danger:focus-visible { outline: 2px solid #ef4444; } .ds-btn-danger:active { background: #f87171; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Action secondaire ou annulation. Fond page, discret.",
+      "html": "<button class=\"ds-btn-ghost\">Annuler</button>",
+      "css": ".ds-btn-ghost { background: #f1f5f9; color: #1e293b; padding: 8px 16px; border: none; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; cursor: pointer; transition: background 150ms cubic-bezier(0.4,0,0.2,1); outline-offset: 2px; } .ds-btn-ghost:hover { background: #e2e8f0; } .ds-btn-ghost:focus-visible { outline: 2px solid #3b82f6; } .ds-btn-ghost:active { background: #cbd5e1; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Champ de saisie standard. Stroke au repos, focus Signal Blue.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"ds-input-1\">Nom</label><input class=\"ds-input\" id=\"ds-input-1\" type=\"text\" placeholder=\"Dupont\"></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; } .ds-label { font-size: 12px; font-weight: 500; color: #475569; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-input { padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; font-weight: 500; color: #1e293b; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; transition: border-color 150ms, box-shadow 150ms; outline: none; } .ds-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); } .ds-input::placeholder { color: #94a3b8; } .ds-input:disabled { opacity: 0.6; cursor: not-allowed; }"
+    },
+    {
+      "name": "Status Badge — Active",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "Badge de statut actif/présent. Fond vert clair, texte vert.",
+      "html": "<span class=\"ds-badge ds-badge--active\">Présent</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; letter-spacing: 0.2px; } .ds-badge--active { background: #dcfce7; color: #16a34a; } .ds-badge--inactive { background: #fee2e2; color: #dc2626; } .ds-badge--pending { background: #fef9c3; color: #854d0e; } .ds-badge--approved { background: #dbeafe; color: #1d4ed8; } .ds-badge--rejected { background: #fde8d8; color: #c2410c; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Container de contenu. Fond blanc, coins arrondis, séparation par bordure ou contraste de fond.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-header\"><span class=\"ds-card-title\">Sessions récentes</span></div><div class=\"ds-card-body\"><p style=\"color:#64748b;font-size:14px;margin:0\">Contenu de la card</p></div></div>",
+      "css": ".ds-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-card-header { padding: 12px 16px; border-bottom: 1px solid #e2e8f0; } .ds-card-title { font-size: 14px; font-weight: 600; color: #1e293b; } .ds-card-body { padding: 16px; } .ds-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: box-shadow 200ms cubic-bezier(0.4,0,0.2,1); }"
+    },
+    {
+      "name": "Nav Item — Sidebar",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Item de navigation dans la sidebar sombre. Texte subtil au repos, Signal Blue actif.",
+      "html": "<nav class=\"ds-sidebar\"><a class=\"ds-nav-item ds-nav-item--active\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/></svg>Dashboard</a><a class=\"ds-nav-item\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/></svg>Employés</a></nav>",
+      "css": ".ds-sidebar { background: #0f172a; padding: 12px 8px; display: flex; flex-direction: column; gap: 2px; width: 200px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500; color: #94a3b8; text-decoration: none; transition: background 150ms, color 150ms; } .ds-nav-item:hover { background: rgba(255,255,255,0.06); color: #ffffff; } .ds-nav-item--active { background: #3b82f6; color: #ffffff; } .ds-nav-item:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Precision Instrument",
+    "overview": "TimeFlow est un outil interne de gestion du temps — pas une vitrine, pas un SaaS à vendre. Son identité visuelle est celle d'un instrument de précision : chaque décision de design sert une fonction. Le système repose sur une typographie système lisible, une palette fonctionnelle centrée sur des statuts clairs, et une densité d'information assumée.\n\nLe dark sidebar contraste avec le contenu blanc pour séparer navigation et travail sans décoration superflue. Le bleu Signal Blue n'apparaît que là où l'utilisateur peut agir ou où quelque chose est actif. Les couleurs de statut (vert, rouge, orange, jaune) sont fonctionnelles et sémantiques — jamais décoratives.\n\nCe système rejette explicitement les interfaces RH génériques datées et denses, les dashboards SaaS avec leurs héros-métriques et gradients partout, et les applications grand public trop ludiques.",
+    "keyCharacteristics": [
+      "Typographie système — aucune font custom, lisibilité maximale sur tous les OS",
+      "Statuts sémantiques — chaque couleur a une signification précise et unique",
+      "Sidebar sombre / contenu clair — séparation nette sans border ni shadow",
+      "Densité assumée — 14px body, 8px base unit, information sans padding excessif",
+      "Plat par défaut — les ombres signalent une élévation contextuelle, pas une esthétique"
+    ],
+    "rules": [
+      { "name": "The One Signal Rule",        "body": "Signal Blue est la seule couleur non-sémantique du système. Toutes les autres (vert, rouge, orange, jaune) ont une signification fixe et ne peuvent pas être réutilisées dans d'autres contextes.",      "section": "colors" },
+      { "name": "The No-Decoration Rule",     "body": "Aucune couleur du système ne doit apparaître uniquement pour animer une interface ou la rendre plus belle. Si une couleur est présente, elle communique quelque chose.",                                "section": "colors" },
+      { "name": "The 14px Floor Rule",        "body": "Aucun texte fonctionnel n'est en dessous de 14px. Les 12px sont réservés aux labels purement contextuels.",                                                                                              "section": "typography" },
+      { "name": "The Weight Hierarchy Rule",  "body": "La hiérarchie se fait par le poids (500 → 600 → 700 → 800), jamais par la taille seule. Ne pas créer de nouvelles tailles — utiliser les cinq étages définis.",                                          "section": "typography" },
+      { "name": "The Flat-By-Default Rule",   "body": "Une card sans interaction n'a pas d'ombre. La sidebar n'a pas d'ombre. L'ombre est une réponse à une action ou un état, pas une esthétique.",                                                            "section": "elevation" },
+      { "name": "The Semantic Color Rule",    "body": "Un badge ne peut avoir qu'une couleur correspondant à son statut sémantique réel. Interdiction de choisir une couleur de badge pour qu'il soit joli.",                                                    "section": "components" }
+    ],
+    "dos": [
+      "Do utiliser Signal Blue (#3b82f6) exclusivement pour les éléments interactifs et les statuts actifs.",
+      "Do respecter la hiérarchie des 5 poids typographiques (500/600/700/800).",
+      "Do communiquer la profondeur par contraste de fond (#f1f5f9 vs #ffffff) au repos.",
+      "Do garder les couleurs de statut strictement sémantiques : vert = actif, rouge = terminé/erreur, orange = attention, jaune = pause.",
+      "Do appliquer un focus visible (outline: 2px solid #3b82f6) sur tous les éléments interactifs.",
+      "Do utiliser 14px comme taille plancher pour tout texte fonctionnel."
+    ],
+    "donts": [
+      "Don't utiliser d'outils RH génériques comme référence (SAP, ADP, Sage RH).",
+      "Don't importer une font custom.",
+      "Don't ajouter des ombres permanentes aux cards au repos.",
+      "Don't créer de héros-métriques géants avec des gradients ou des grilles de cards identiques.",
+      "Don't utiliser des animations excessives, des emojis ou un ton trop décontracté.",
+      "Don't utiliser une couleur de statut dans un contexte purement décoratif.",
+      "Don't descendre en dessous de 14px pour du texte fonctionnel.",
+      "Don't appliquer outline: none sans focus alternative visible."
+    ]
+  }
+}

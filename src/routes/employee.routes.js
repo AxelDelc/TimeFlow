@@ -2,13 +2,30 @@ const express = require('express');
 const { requireAuth } = require('../middlewares/auth.middleware');
 const WorkSession = require('../models/workSession.model');
 const prisma = require('../db/prisma');
+const moment = require('moment');
+moment.locale('fr');
 
 const router = express.Router();
 
 // Dashboard de l'employé
 router.get('/', requireAuth, async (req, res) => {
-  const sessions = await WorkSession.getUserSessions(req.session.user.id);
-  res.render('employee/dashboard', { sessions, user: req.session.user });
+  const rawSessions = await WorkSession.getUserSessions(req.session.user.id);
+
+  const sessions = rawSessions.map(s => ({
+    ...s,
+    startTimeFormatted: moment(s.startTime).format('HH[h]mm'),
+    endTimeFormatted:   s.endTime ? moment(s.endTime).format('HH[h]mm') : null,
+  }));
+
+  const today = new Date();
+  const employeeDate = today.toLocaleDateString('fr-FR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  res.render('employee/dashboard', { sessions, user: req.session.user, employeeDate });
 });
 
 // Démarrer une session de travail
