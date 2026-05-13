@@ -22,14 +22,14 @@ router.get('/', requireAdmin, async (req, res) => {
 
   // findMany() : récupère plusieurs lignes — include charge la relation (JOIN automatique)
   const recentSessions = await prisma.workSession.findMany({
+    where: { user: { isActive: true } },
     include: { user: true },
     orderBy: { startTime: 'desc' },
     take: 10,
   });
 
-  // findMany() avec where : filtre les sessions sans heure de fin (employés encore présents)
   const activeNow = await prisma.workSession.findMany({
-    where: { endTime: null },
+    where: { endTime: null, user: { isActive: true } },
     include: { user: true },
     orderBy: { startTime: 'desc' },
   });
@@ -121,11 +121,19 @@ router.get('/employees/:id/sessions', requireAdmin, async (req, res) => {
 
 // Désactiver un salarié
 router.post('/employees/:id/disable', requireAdmin, async (req, res) => {
-  // update() : modifie les colonnes listées dans data pour la ligne ciblée par where
-  await prisma.user.update({
-    where: { id: parseInt(req.params.id) },
-    data: { isActive: false },
-  });
+  const id = parseInt(req.params.id);
+
+  await prisma.$transaction([
+    prisma.workSession.updateMany({
+      where: { userId: id, endTime: null },
+      data: { endTime: new Date() },
+    }),
+    prisma.user.update({
+      where: { id },
+      data: { isActive: false },
+    }),
+  ]);
+
   res.redirect('/admin/employees');
 });
 
