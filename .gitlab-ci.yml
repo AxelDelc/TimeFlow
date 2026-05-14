@@ -1,0 +1,98 @@
+stages:
+  - install
+  - quality
+  - e2e
+  - build
+
+.node_cache: &node_cache
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+    policy: pull
+
+variables:
+  NODE_VERSION: "20"
+
+
+install:
+  stage: install
+  image: node:${NODE_VERSION}-alpine
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+    policy: pull-push          # seul ce job écrit dans le cache
+  script:
+    - npm ci --prefer-offline
+  artifacts:
+    paths:
+      - node_modules/.prisma/  # client Prisma généré par postinstall
+    expire_in: 1 hour
+
+═
+lint:
+  stage: quality
+  image: node:${NODE_VERSION}-alpine
+  needs: [install]
+  <<: *node_cache
+  script:
+    - npm run lint
+
+format:check:
+  stage: quality
+  image: node:${NODE_VERSION}-alpine
+  needs: [install]
+  <<: *node_cache
+  script:
+    - npm run format:check
+
+
+unit:test:
+  stage: quality
+  image: node:${NODE_VERSION}-alpine
+  needs: [install]
+  <<: *node_cache
+  script:
+    - npm run test:unit
+
+
+e2e-tests:
+  stage: e2e
+  # Image officielle Playwright
+  image: mcr.microsoft.com/playwright:v1.44.0-jammy
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+  script:
+    - npm ci
+    - npx playwright install chromium
+    - npm run test:e2e        # Playwright démarre Vite automatiquement
+  artifacts:
+    when: on_failure
+    paths:
+      - playwright-report/
+    expire_in: 7 days
+
+
+build:front:
+  stage: build
+  image: node:${NODE_VERSION}-alpine
+  needs: [install]
+  <<: *node_cache
+  script:
+    - npm run build:front
+  artifacts:
+    paths:
+      - public/dist/
+    expire_in: 7 days
+  only:
+    - main
+    - merge_requests
