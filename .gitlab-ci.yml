@@ -96,3 +96,5 @@ build:front:
   only:
     - main
     - merge_requests
+
+    #test commit
