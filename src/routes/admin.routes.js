@@ -149,20 +149,22 @@ router.post('/employees/:id/enable', requireAdmin, async (req, res) => {
 
 // Tous les pointages
 router.get('/sessions', requireAdmin, async (_req, res) => {
-  // findMany() avec take : limite les résultats à 200 lignes (équivalent SQL LIMIT)
   const raw = await prisma.workSession.findMany({
     include: { user: true },
     orderBy: { startTime: 'desc' },
-    take: 200,
   });
 
-  const sessions = raw.map((s) => ({
-    ...s,
-    startTime: moment(s.startTime).format('DD/MM/YYYY à HH[h]mm'),
-    endTime: s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : '—',
-  }));
+  const grouped = {};
+  raw.forEach((s) => {
+    if (!grouped[s.userId]) grouped[s.userId] = { employee: s.user, sessions: [] };
+    grouped[s.userId].sessions.push({
+      ...s,
+      startTime: moment(s.startTime).format('DD/MM/YYYY à HH[h]mm'),
+      endTime: s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : '—',
+    });
+  });
 
-  res.render('admin/sessions', { sessions, user: _req.session.user });
+  res.render('admin/sessions', { grouped: Object.values(grouped), user: _req.session.user });
 });
 
 // afficher le planning d'un employé

@@ -165,3 +165,52 @@
   color: var(--color-text-muted);
   font-weight: 500;
 }
+
+/* Sessions groupées par employé (admin) ---------------------- */
+
+.sessions-group {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sessions-group:last-child {
+  border-bottom: none;
+}
+
+.sessions-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-5);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  gap: var(--space-3);
+}
+
+.sessions-group-header::-webkit-details-marker {
+  display: none;
+}
+
+.sessions-group-header:hover {
+  background: var(--color-page);
+}
+
+.sessions-group-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sessions-chevron {
+  color: var(--color-text-muted);
+  transition: transform 0.15s ease;
+  flex-shrink: 0;
+}
+
+.sessions-group[open] .sessions-chevron {
+  transform: rotate(180deg);
+}
+
+.sessions-group .table-wrap {
+  border-top: 1px solid var(--color-border);
+}
