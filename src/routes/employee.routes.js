@@ -11,10 +11,10 @@ const router = express.Router();
 router.get('/', requireAuth, async (req, res) => {
   const rawSessions = await WorkSession.getUserSessions(req.session.user.id);
 
-  const sessions = rawSessions.map(s => ({
+  const sessions = rawSessions.map((s) => ({
     ...s,
     startTimeFormatted: moment(s.startTime).format('HH[h]mm'),
-    endTimeFormatted:   s.endTime ? moment(s.endTime).format('HH[h]mm') : null,
+    endTimeFormatted: s.endTime ? moment(s.endTime).format('HH[h]mm') : null,
   }));
 
   const today = new Date();

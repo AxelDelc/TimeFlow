@@ -39,12 +39,12 @@ router.get('/', requireAdmin, async (req, res) => {
   res.render('admin/dashboard', {
     user: req.session.user,
     stats: { totalEmployees, activeEmployees, sessionsToday, currentlyIn },
-    recentSessions: recentSessions.map(s => ({
+    recentSessions: recentSessions.map((s) => ({
       ...s,
       startTime: fmt(s.startTime),
-      endTime:   fmt(s.endTime),
+      endTime: fmt(s.endTime),
     })),
-    activeNow: activeNow.map(s => ({
+    activeNow: activeNow.map((s) => ({
       ...s,
       startTime: moment(s.startTime).format('HH[h]mm'),
     })),
@@ -110,10 +110,10 @@ router.get('/employees/:id/sessions', requireAdmin, async (req, res) => {
     orderBy: { startTime: 'desc' },
   });
 
-  const sessions = raw.map(s => ({
+  const sessions = raw.map((s) => ({
     ...s,
     startTime: moment(s.startTime).format('DD/MM/YYYY à HH[h]mm'),
-    endTime:   s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : '—',
+    endTime: s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : '—',
   }));
 
   res.render('admin/employee-sessions', { employee, sessions, user: req.session.user });
@@ -156,10 +156,10 @@ router.get('/sessions', requireAdmin, async (_req, res) => {
     take: 200,
   });
 
-  const sessions = raw.map(s => ({
+  const sessions = raw.map((s) => ({
     ...s,
     startTime: moment(s.startTime).format('DD/MM/YYYY à HH[h]mm'),
-    endTime:   s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : '—',
+    endTime: s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : '—',
   }));
 
   res.render('admin/sessions', { sessions, user: _req.session.user });
