@@ -33,7 +33,7 @@
   const nextWeekStr = utcStr(new Date(weekStart.getTime() + 7 * DAY_MS));
   const weekLabel =
     weekStart.toLocaleDateString('fr-FR', { timeZone: 'UTC' }) +
-    ' – ' +
+    ' au ' +
     new Date(weekStart.getTime() + 6 * DAY_MS).toLocaleDateString('fr-FR', { timeZone: 'UTC' });
   const todayStr = utcStr(new Date());
   const hours = Array.from({ length: HOUR_END - HOUR_START + 1 }, (_, i) => HOUR_START + i);
