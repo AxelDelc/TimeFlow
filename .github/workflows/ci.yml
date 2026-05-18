@@ -77,6 +77,26 @@ jobs:
     name: E2E tests
     runs-on: ubuntu-latest
     needs: [lint, format-check, unit-test]
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: timeflow
+          POSTGRES_PASSWORD: timeflow
+          POSTGRES_DB: timeflow_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://timeflow:timeflow@localhost:5432/timeflow_test
+      SESSION_SECRET: ci-secret
+
     steps:
       - uses: actions/checkout@v4
 
@@ -86,6 +106,9 @@ jobs:
           cache: npm
 
       - run: npm install
+
+      - name: Apply migrations
+        run: npx prisma migrate deploy
 
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
