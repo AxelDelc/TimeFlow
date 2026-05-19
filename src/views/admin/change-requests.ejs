@@ -1,0 +1,59 @@
+<%- include('../layout/header', { pageTitle: 'Demandes de planning', currentPage: 'change-requests', user: user }) %>
+
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">Demandes de modification</span>
+        <span class="badge badge-blue"><%= requests.length %> en attente</span>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Salarié</th>
+                    <th>Créneau actuel</th>
+                    <th>Nouveau créneau</th>
+                    <th>Message</th>
+                    <th>Reçu le</th>
+                    <th class="col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (requests.length === 0) { %>
+                    <tr><td colspan="6" class="empty-state">Aucune demande en attente</td></tr>
+                <% } %>
+                <% requests.forEach(r => { %>
+                    <tr>
+                        <td>
+                            <div class="employee-cell">
+                                <span class="user-avatar avatar-sm avatar-dark"><%= r.user.name.charAt(0).toUpperCase() %></span>
+                                <strong><%= r.user.name %></strong>
+                            </div>
+                        </td>
+                        <td class="text-muted">
+                            <%= r.originalSlot.date %><br>
+                            <span style="font-size: var(--text-label)"><%= r.originalSlot.startTime %> → <%= r.originalSlot.endTime %></span>
+                        </td>
+                        <td>
+                            <%= r.newDate %><br>
+                            <span style="font-size: var(--text-label)"><%= r.newStartTime %> → <%= r.newEndTime %></span>
+                        </td>
+                        <td class="text-muted"><%= r.employeeMessage || '—' %></td>
+                        <td class="text-muted"><%= r.createdAt %></td>
+                        <td>
+                            <div class="actions-cell">
+                                <form method="POST" action="/admin/change-requests/<%= r.id %>/approve">
+                                    <button class="btn btn-success btn-sm">Accepter</button>
+                                </form>
+                                <form method="POST" action="/admin/change-requests/<%= r.id %>/reject">
+                                    <button class="btn btn-danger btn-sm">Refuser</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<%- include('../layout/footer') %>

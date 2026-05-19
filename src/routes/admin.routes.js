@@ -93,32 +93,6 @@ router.post('/employees/new', requireAdmin, async (req, res) => {
   }
 });
 
-// Pointages d'un salarié
-router.get('/employees/:id/sessions', requireAdmin, async (req, res) => {
-  const id = parseInt(req.params.id);
-  // findFirst() : récupère la première ligne correspondante (ou null si aucune)
-  const employee = await prisma.user.findFirst({
-    where: { id, role: 'employee' },
-    select: { id: true, name: true, email: true, isActive: true },
-  });
-
-  if (!employee) return res.status(404).send('Salarié introuvable');
-
-  // findMany() : récupère tous les pointages de cet employé
-  const raw = await prisma.workSession.findMany({
-    where: { userId: id },
-    orderBy: { startTime: 'desc' },
-  });
-
-  const sessions = raw.map((s) => ({
-    ...s,
-    startTime: moment(s.startTime).format('DD/MM/YYYY à HH[h]mm'),
-    endTime: s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : '—',
-  }));
-
-  res.render('admin/employee-sessions', { employee, sessions, user: req.session.user });
-});
-
 // Désactiver un salarié
 router.post('/employees/:id/disable', requireAdmin, async (req, res) => {
   const id = parseInt(req.params.id);
@@ -206,6 +180,52 @@ router.get('/schedule/:userId', requireAdmin, async (req, res) => {
     console.error(error);
     res.status(404).send('Erreur lors de la récupération du planning');
   }
+});
+
+// Demandes de changement de planning
+router.get('/change-requests', requireAdmin, async (req, res) => {
+  const raw = await prisma.scheduleChangeRequest.findMany({
+    where: { status: 'pending' },
+    include: { user: true, originalSlot: true },
+    orderBy: { createdAt: 'asc' },
+  });
+
+  const fmt = (d) => moment(d).format('DD/MM à HH[h]mm');
+  const requests = raw.map((r) => ({
+    ...r,
+    originalSlot: {
+      date: moment(r.originalSlot.date).format('DD/MM/YYYY'),
+      startTime: fmt(r.originalSlot.startTime),
+      endTime: fmt(r.originalSlot.endTime),
+    },
+    newDate: moment(r.newDate).format('DD/MM/YYYY'),
+    newStartTime: fmt(r.newStartTime),
+    newEndTime: fmt(r.newEndTime),
+    createdAt: moment(r.createdAt).format('DD/MM à HH[h]mm'),
+  }));
+
+  res.render('admin/change-requests', { requests, user: req.session.user });
+});
+
+router.post('/change-requests/:id/approve', requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id);
+  const request = await prisma.scheduleChangeRequest.update({
+    where: { id },
+    data: { status: 'approved' },
+  });
+  await prisma.scheduleSlot.update({
+    where: { id: request.originalSlotId },
+    data: { date: request.newDate, startTime: request.newStartTime, endTime: request.newEndTime },
+  });
+  res.redirect('/admin/change-requests');
+});
+
+router.post('/change-requests/:id/reject', requireAdmin, async (req, res) => {
+  await prisma.scheduleChangeRequest.update({
+    where: { id: parseInt(req.params.id) },
+    data: { status: 'rejected' },
+  });
+  res.redirect('/admin/change-requests');
 });
 
 module.exports = router;

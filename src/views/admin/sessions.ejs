@@ -11,7 +11,7 @@
     <% } %>
 
     <% grouped.forEach(g => { %>
-        <details class="sessions-group">
+        <details class="sessions-group" id="employee-<%= g.employee.id %>">
             <summary class="sessions-group-header">
                 <div class="employee-cell">
                     <div class="user-avatar avatar-dark avatar-sm">
@@ -56,5 +56,15 @@
         </details>
     <% }) %>
 </div>
+
+<script>
+  if (window.location.hash) {
+    const target = document.querySelector('details' + window.location.hash);
+    if (target) {
+      target.open = true;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+</script>
 
 <%- include('../layout/footer') %>
