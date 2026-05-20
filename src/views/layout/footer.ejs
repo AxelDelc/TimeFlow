@@ -2,5 +2,17 @@
     </div>
 
 </div>
+<script>
+(function () {
+    var toggle = document.querySelector('.sidebar-toggle');
+    var close  = document.querySelector('.sidebar-close');
+    var overlay = document.querySelector('.sidebar-overlay');
+    function open()  { document.body.classList.add('sidebar-open'); }
+    function shut()  { document.body.classList.remove('sidebar-open'); }
+    if (toggle)  toggle.addEventListener('click', open);
+    if (close)   close.addEventListener('click', shut);
+    if (overlay) overlay.addEventListener('click', shut);
+})();
+</script>
 </body>
 </html>

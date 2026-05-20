@@ -201,3 +201,30 @@
 .sessions-group .table-wrap {
   border-top: 1px solid var(--color-border);
 }
+
+@media (max-width: 768px) {
+  .punch-wrapper {
+    max-width: 100%;
+  }
+
+  .sessions-card {
+    max-width: 100%;
+  }
+
+  .punch-btn--primary {
+    padding: 14px var(--space-4);
+    font-size: var(--text-body);
+  }
+
+  .sessions-group-header {
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .employees-table .col-actions {
+    text-align: left;
+  }
+
+  .actions-cell {
+    justify-content: flex-start;
+  }
+}

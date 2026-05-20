@@ -757,3 +757,54 @@ dialog::backdrop {
 .stat-row--active .stat-row-value {
   color: var(--color-active-text);
 }
+
+@media (max-width: 768px) {
+  .stats-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stats-bar-item {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .stats-bar-item:nth-child(odd) {
+    border-right: 1px solid var(--color-border);
+  }
+
+  .stats-bar-item:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+
+  .stats-bar-value {
+    font-size: 22px;
+  }
+
+  .card-header {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .actions-cell {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .sc-calendar {
+    font-size: 10px;
+  }
+
+  .stat-summary {
+    margin-bottom: 8px;
+  }
+}
