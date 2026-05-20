@@ -1,63 +1,77 @@
-:root {
-  /* ===========================================
-     PRIMITIVE TOKENS
-     Raw color values — never use directly in
-     components. Compose via semantic tokens.
-     =========================================== */
+﻿:root {
+  
+  --onyx:           #0b090a;
+  --carbon-black:   #161a1d;
+  --dark-garnet:    #660708;
+  --mahogany-red:   #a4161a;
+  --mahogany-red-2: #ba181b;
+  --strawberry-red: #e5383b;
+  --silver:         #b1a7a6;
+  --dust-grey:      #d3d3d3;
+  --white-smoke:    #f5f3f4;
+  --white:          #ffffff;
 
-  /* Signal blue — deeper indigo, not Tailwind default */
-  --prim-signal-300: oklch(72% 0.17 255);
-  --prim-signal-500: oklch(55% 0.23 255);
-  --prim-signal-600: oklch(47% 0.22 255);
-  --prim-signal-50:  oklch(96% 0.018 258);
-  --prim-signal-100: oklch(91% 0.04 257);
+  
 
-  /* Active green (punch-in, sessions en cours) */
-  --prim-active-500: oklch(67% 0.19 145);
-  --prim-active-50:  oklch(96% 0.04 145);
-  --prim-active-700: oklch(40% 0.14 145);
+  
+  --prim-signal-300: #e5383b;   
+  --prim-signal-500: #e5383b;   
+  --prim-signal-600: #ba181b;   
+  --prim-signal-50:  #fef0f0;   
+  --prim-signal-100: #fad4d4;   
 
-  /* End red (punch-out, erreurs, destructif) */
-  --prim-end-500: oklch(60% 0.22 24);
-  --prim-end-50:  oklch(96.5% 0.035 22);
-  --prim-end-700: oklch(38% 0.17 24);
+  
+  --prim-teal-500:  #a4161a;    
+  --prim-teal-50:   #fae8e8;    
+  --prim-teal-700:  #660708;    
 
-  /* Attention orange (heures supp, à surveiller) */
-  --prim-attn-500: oklch(68% 0.185 50);
-  --prim-attn-50:  oklch(96% 0.045 65);
-  --prim-attn-700: oklch(44% 0.14 50);
+  
+  --prim-active-500: #10b981;
+  --prim-active-50:  #d1fae5;
+  --prim-active-700: #065f46;
 
-  /* Break yellow (créneaux pause uniquement) */
-  --prim-break-500: oklch(80% 0.155 90);
-  --prim-break-50:  oklch(97% 0.04 95);
-  --prim-break-700: oklch(37% 0.10 75);
+  
+  --prim-end-500: #a4161a;      
+  --prim-end-50:  #fae8e8;      
+  --prim-end-700: #660708;      
 
-  /* Neutrals — léger tint indigo (hue 262) pour cohérence palette */
-  --prim-n-950: oklch(13% 0.018 260);   /* sidebar bg */
-  --prim-n-920: oklch(22% 0.015 260);   /* active sidebar item bg */
-  --prim-n-900: oklch(18% 0.014 262);   /* text primary */
-  --prim-n-700: oklch(35% 0.013 262);   /* texte sur fond sombre */
-  --prim-n-500: oklch(44% 0.012 262);   /* text muted */
-  --prim-n-400: oklch(48% 0.010 262);   /* text subtle / placeholder */
-  --prim-n-200: oklch(90% 0.008 262);   /* border */
-  --prim-n-100: oklch(94% 0.007 262);   /* row separator */
-  --prim-n-50:  oklch(96.5% 0.006 262); /* page surface */
-  --prim-n-20:  oklch(99% 0.002 262);   /* card surface */
+  
+  --prim-attn-500: #f97316;
+  --prim-attn-50:  #fff7ed;
+  --prim-attn-700: #c2410c;
 
-  /* On-dark (textes sur sidebar sombre) */
-  --prim-on-dark-high: oklch(96% 0.004 262);
-  --prim-on-dark-mid:  oklch(65% 0.009 262);
+  
+  --prim-break-500: #eab308;
+  --prim-break-50:  #fef9c3;
+  --prim-break-700: #713f12;
 
-  /* ===========================================
-     SEMANTIC TOKENS
-     Nommés par rôle, pas par valeur.
-     =========================================== */
+  
+  --prim-n-950: #161a1d;   
+  --prim-n-920: #0b090a;   
+  --prim-n-900: #0b090a;   
+  --prim-n-700: #161a1d;   
+  --prim-n-500: #6b6060;   
+  --prim-n-400: #b1a7a6;   
+  --prim-n-200: #d3d3d3;   
+  --prim-n-100: #ece9ea;   
+  --prim-n-50:  #f5f3f4;   
+  --prim-n-20:  #ffffff;   
 
-  --color-signal:        var(--prim-signal-500);
-  --color-signal-hover:  var(--prim-signal-600);
-  --color-signal-light:  var(--prim-signal-50);
-  --color-signal-mid:    var(--prim-signal-100);
+  
+  --prim-on-dark-high: #ffffff;    
+  --prim-on-dark-mid:  #b1a7a6;   
+
+  
+
+  --color-signal:         var(--prim-signal-500);
+  --color-signal-hover:   var(--prim-signal-600);
+  --color-signal-light:   var(--prim-signal-50);
+  --color-signal-mid:     var(--prim-signal-100);
   --color-signal-on-dark: var(--prim-signal-300);
+
+  --color-teal:          var(--prim-teal-500);
+  --color-teal-light:    var(--prim-teal-50);
+  --color-teal-text:     var(--prim-teal-700);
 
   --color-active:        var(--prim-active-500);
   --color-active-light:  var(--prim-active-50);
@@ -67,9 +81,9 @@
   --color-end-light:     var(--prim-end-50);
   --color-end-text:      var(--prim-end-700);
 
-  --color-attention:     var(--prim-attn-500);
+  --color-attention:       var(--prim-attn-500);
   --color-attention-light: var(--prim-attn-50);
-  --color-attention-text: var(--prim-attn-700);
+  --color-attention-text:  var(--prim-attn-700);
 
   --color-break:         var(--prim-break-500);
   --color-break-light:   var(--prim-break-50);
@@ -88,8 +102,7 @@
   --color-on-dark:         var(--prim-on-dark-high);
   --color-on-dark-muted:   var(--prim-on-dark-mid);
 
-  /* Aliases legacy — permettent aux composants
-     existants de fonctionner sans modification HTML */
+  
   --white:         var(--prim-n-20);
   --blue:          var(--prim-signal-500);
   --blue-hover:    var(--prim-signal-600);
@@ -108,29 +121,25 @@
   --yellow-light:  var(--prim-break-50);
   --yellow-dark:   var(--prim-break-700);
   --slate-900:     var(--prim-n-900);
-  --slate-800:     oklch(24% 0.013 262);
-  --slate-700:     oklch(32% 0.013 262);
-  --slate-600:     oklch(42% 0.012 262);
+  --slate-800:     #161a1d;
+  --slate-700:     #2a2e31;
+  --slate-600:     #4a4848;
   --slate-500:     var(--prim-n-500);
   --slate-400:     var(--prim-n-400);
-  --slate-300:     oklch(80% 0.008 262);
+  --slate-300:     #d3d3d3;
   --slate-200:     var(--prim-n-200);
   --slate-100:     var(--prim-n-100);
   --slate-50:      var(--prim-n-50);
 
-  /* ===========================================
-     TYPOGRAPHY
-     =========================================== */
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --text-display:  48px;
-  --text-headline: 26px;
-  --text-title:    18px;
-  --text-body:     14px;
-  --text-label:    12px;
+  
+  --font: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --text-display:  40px;
+  --text-headline: 22px;
+  --text-title:    16px;
+  --text-body:     13px;
+  --text-label:    11px;
 
-  /* ===========================================
-     SPACING (base 4px)
-     =========================================== */
+  
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -141,26 +150,19 @@
   --space-8: 32px;
   --space-9: 40px;
 
-  /* ===========================================
-     RADIUS — resserré vers le bas pour précision
-     =========================================== */
-  --radius-sm:   5px;
-  --radius-md:   6px;
-  --radius-lg:   10px;
+  
+  --radius-sm:   3px;
+  --radius-md:   4px;
+  --radius-lg:   5px;
   --radius-pill: 999px;
 
-  /* ===========================================
-     SHADOWS
-     =========================================== */
-  --shadow-modal: 0 24px 64px oklch(5% 0.02 260 / 0.22),
-                  0 4px 16px  oklch(5% 0.02 260 / 0.10);
-  --shadow-hover: 0 4px 12px  oklch(5% 0.02 260 / 0.08);
-  --shadow-focus: 0 0 0 3px   oklch(55% 0.23 255 / 0.18);
+  
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.28),
+                  0 4px 16px  rgba(0, 0, 0, 0.14);
+  --shadow-hover: 0 4px 12px  rgba(0, 0, 0, 0.10);
+  --shadow-focus: 0 0 0 3px   rgba(229, 56, 59, 0.28);
 }
 
-/* ===========================================
-   RESET
-   =========================================== */
 *,
 *::before,
 *::after {
@@ -169,14 +171,11 @@
   padding: 0;
 }
 
-/* ===========================================
-   BASE
-   =========================================== */
 body {
   font-family: var(--font);
   font-size: var(--text-body);
-  font-weight: 500;
-  line-height: 1.5;
+  font-weight: 400;
+  line-height: 1.4;
   color: var(--color-text);
   background: var(--color-page);
 }

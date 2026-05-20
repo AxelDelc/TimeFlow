@@ -1,4 +1,4 @@
-/* ===== ESPACE SALARIÉ ===== */
+﻿
 
 .punch-wrapper {
   max-width: 480px;
@@ -8,14 +8,12 @@
   max-width: 700px;
 }
 
-/* Punch card ------------------------------------------------- */
-
 .punch-card {
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   background: var(--color-card);
-  margin-bottom: var(--space-6);
+  margin-bottom: 12px;
 }
 
 .punch-status {
@@ -33,7 +31,7 @@
 
 .punch-status--active {
   background: var(--color-active-light);
-  border-bottom-color: oklch(88% 0.06 145);
+  border-bottom-color: #86efac;
   color: var(--color-active-text);
 }
 
@@ -61,7 +59,6 @@
   display: block;
 }
 
-/* Primary: full-width, large, tactile */
 .punch-btn--primary {
   display: block;
   width: 100%;
@@ -85,7 +82,6 @@
   outline-offset: 2px;
 }
 
-/* Texte sombre sur fond coloré saturé — WCAG AA garanti */
 .punch-in {
   background: var(--color-active);
   color: var(--color-text);
@@ -96,7 +92,6 @@
   color: var(--color-text);
 }
 
-/* Secondary: muted, compact, clearly unavailable */
 .punch-btn--secondary {
   display: block;
   width: 100%;
@@ -112,13 +107,9 @@
   opacity: 0.55;
 }
 
-/* Sessions table -------------------------------------------- */
-
 .sessions-row-active td {
   background: var(--color-active-light);
 }
-
-/* Top bar date (employee view) ------------------------------ */
 
 .topbar-date {
   font-size: var(--text-label);
@@ -127,8 +118,6 @@
   letter-spacing: 0.2px;
   text-transform: capitalize;
 }
-
-/* Liste des salariés (admin) --------------------------------- */
 
 .employees-table td,
 .employees-table th {
@@ -165,8 +154,6 @@
   color: var(--color-text-muted);
   font-weight: 500;
 }
-
-/* Sessions groupées par employé (admin) ---------------------- */
 
 .sessions-group {
   border-bottom: 1px solid var(--color-border);

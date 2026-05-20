@@ -120,7 +120,10 @@ router.delete('/schedule/slot/:slotId', requireAdmin, async (req, res) => {
     return res.status(404).json({ error: 'Créneau non trouvé' });
   }
   try {
-    await prisma.scheduleSlot.delete({ where: { id: slotId } });
+    await prisma.$transaction([
+      prisma.scheduleChangeRequest.deleteMany({ where: { originalSlotId: slotId } }),
+      prisma.scheduleSlot.delete({ where: { id: slotId } }),
+    ]);
     return res.json({ message: 'Créneau supprimé avec succès' });
   } catch (error) {
     console.error('Erreur lors de la suppression du créneau:', error);

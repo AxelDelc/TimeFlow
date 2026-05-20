@@ -1,6 +1,5 @@
-/* ===== PAGE D'ACCUEIL ===== */
+﻿
 
-/* Navigation */
 .home-nav {
   display: flex;
   align-items: center;
@@ -39,7 +38,6 @@
   color: var(--color-text);
 }
 
-/* Hero */
 .hero {
   background: var(--color-sidebar);
   padding: 100px 60px;
@@ -50,9 +48,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: oklch(22% 0.015 260);
+  background: #660708;
   color: var(--color-signal-on-dark);
-  border: 1px solid oklch(28% 0.04 258);
+  border: 1px solid #a4161a;
   padding: 5px 14px;
   border-radius: var(--radius-pill);
   font-size: var(--text-label);
@@ -124,7 +122,6 @@
   height: 15px;
 }
 
-/* Features */
 .features {
   padding: 80px 60px;
   background: var(--color-page);
@@ -160,8 +157,6 @@
   line-height: 1.65;
 }
 
-/* Grille 2 colonnes de feature-rows — plus d'identical card grid.
-   Grid à 2 colonnes sur chaque item (icon | title+desc) sans wrapper HTML. */
 .features-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -232,7 +227,6 @@
   line-height: 1.6;
 }
 
-/* Roles */
 .roles {
   padding: 80px 60px;
   background: var(--color-card);
@@ -282,7 +276,7 @@
 }
 
 .role-card.admin .role-icon {
-  background: oklch(22% 0.015 260);
+  background: #a4161a;
   color: var(--color-signal-on-dark);
 }
 
@@ -328,7 +322,7 @@
   font-size: var(--text-body);
 }
 
-.role-card.admin .role-list li    { color: oklch(80% 0.008 262); }
+.role-card.admin .role-list li    { color: #b1a7a6; }
 .role-card.employee .role-list li { color: var(--color-text-muted); }
 
 .role-check {
@@ -342,7 +336,7 @@
 }
 
 .role-card.admin .role-check {
-  background: oklch(22% 0.015 260);
+  background: #a4161a;
   color: var(--color-signal-on-dark);
 }
 
@@ -356,7 +350,6 @@
   height: 10px;
 }
 
-/* CTA finale */
 .cta-section {
   background: var(--color-sidebar);
   padding: 80px 60px;
@@ -377,9 +370,8 @@
   margin-bottom: var(--space-8);
 }
 
-/* Footer */
 .home-footer {
-  background: oklch(9% 0.016 260);
+  background: #0b090a;
   padding: var(--space-6) 60px;
   display: flex;
   align-items: center;
@@ -396,7 +388,7 @@
 
 .footer-copy {
   font-size: var(--text-label);
-  color: oklch(32% 0.013 262);
+  color: #b1a7a6;
 }
 
 .home-nav-logo--sm {
@@ -405,7 +397,6 @@
   font-size: 10px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .hero {
     padding: 60px var(--space-6);
