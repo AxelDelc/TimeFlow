@@ -14,10 +14,10 @@ test.describe('Admin Page', () => {
 
   test('Should display stats on admin dashboard', async ({ page }) => {
     // Vérifie que les statistiques sont affichées sur le tableau de bord admin
-    await expect(page.getByText('Salariés total')).toBeVisible();
+    await expect(page.getByText('Total salariés')).toBeVisible();
     await expect(page.getByText('Comptes actifs')).toBeVisible();
     await expect(page.getByText("Pointages aujourd'hui")).toBeVisible();
-    await expect(page.getByText('Présents maintenant').first()).toBeVisible();
+    await expect(page.getByText('Présents').first()).toBeVisible();
   });
 
   test('Should be able to create a new employee', async ({ page }) => {

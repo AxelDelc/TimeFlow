@@ -34,7 +34,7 @@ router.get('/', requireAdmin, async (req, res) => {
     orderBy: { startTime: 'desc' },
   });
 
-  const fmt = (d) => (d ? moment(d).format('DD/MM à HH[h]mm') : '—');
+  const fmt = (d) => (d ? moment(d).format('DD/MM à HH[h]mm') : null);
 
   res.render('admin/dashboard', {
     user: req.session.user,
@@ -134,7 +134,7 @@ router.get('/sessions', requireAdmin, async (_req, res) => {
     grouped[s.userId].sessions.push({
       ...s,
       startTime: moment(s.startTime).format('DD/MM/YYYY à HH[h]mm'),
-      endTime: s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : '—',
+      endTime: s.endTime ? moment(s.endTime).format('DD/MM/YYYY à HH[h]mm') : null,
     });
   });
 

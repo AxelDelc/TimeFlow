@@ -49,7 +49,7 @@
                                 </div>
                             </td>
                             <td class="col-time"><%= s.startTime %></td>
-                            <td class="col-time"><%= s.endTime || '—' %></td>
+                            <td class="col-time"><%= s.endTime ?? '' %></td>
                             <td>
                                 <% if (!s.endTime) { %>
                                     <span class="badge badge-green"><span class="badge-dot"></span>En cours</span>

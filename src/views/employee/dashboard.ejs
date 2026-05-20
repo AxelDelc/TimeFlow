@@ -52,7 +52,7 @@
                 <% sessions.forEach(s => { %>
                     <tr<%= !s.endTime ? ' class="sessions-row-active"' : '' %>>
                         <td class="col-time"><%= s.startTimeFormatted %></td>
-                        <td class="col-time"><%= s.endTimeFormatted || '—' %></td>
+                        <td class="col-time"><%= s.endTimeFormatted ?? '' %></td>
                         <td>
                             <% if (!s.endTime) { %>
                                 <span class="badge badge-green"><span class="badge-dot"></span>En cours</span>
