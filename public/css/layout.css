@@ -41,6 +41,13 @@
   letter-spacing: 0.5px;
 }
 
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+}
+
 .brand-name {
   font-size: 18px;
   font-weight: 600;

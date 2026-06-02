@@ -12,7 +12,7 @@ router.get('/', requireAdmin, async (req, res) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // count() : compte le nombre de lignes correspondant au filtre where
+  // compte le nombre de lignes correspondant au filtre where
   const [totalEmployees, activeEmployees, sessionsToday, currentlyIn] = await Promise.all([
     prisma.user.count({ where: { role: 'employee' } }),
     prisma.user.count({ where: { role: 'employee', isActive: true } }),
@@ -20,7 +20,7 @@ router.get('/', requireAdmin, async (req, res) => {
     prisma.workSession.count({ where: { endTime: null } }),
   ]);
 
-  // findMany() : récupère plusieurs lignes — include charge la relation (JOIN automatique)
+  // récupère plusieurs lignes et include charge la relation
   const recentSessions = await prisma.workSession.findMany({
     where: { user: { isActive: true } },
     include: { user: true },
@@ -28,6 +28,7 @@ router.get('/', requireAdmin, async (req, res) => {
     take: 10,
   });
 
+  // sessions actives (endTime null) avec utilisateur actif
   const activeNow = await prisma.workSession.findMany({
     where: { endTime: null, user: { isActive: true } },
     include: { user: true },
@@ -53,7 +54,7 @@ router.get('/', requireAdmin, async (req, res) => {
 
 // Liste des salariés
 router.get('/employees', requireAdmin, async (req, res) => {
-  // findMany() avec select : récupère uniquement les colonnes listées (pas tout le modèle)
+  // récupère uniquement les colonnes listées
   const employees = await prisma.user.findMany({
     where: { role: 'employee' },
     orderBy: { name: 'asc' },
@@ -74,15 +75,12 @@ router.post('/employees/new', requireAdmin, async (req, res) => {
   const hash = await bcrypt.hash(password, 10);
 
   try {
-    // create() : insère une nouvelle ligne — lève une erreur si l'email est déjà pris (contrainte unique)
-    // create() : insère une nouvelle ligne — lève une erreur si l'email est déjà pris (contrainte unique)
     await prisma.user.create({
       data: { name, email, passwordHash: hash, role: 'employee' },
     });
 
     res.redirect('/admin/employees');
   } catch (err) {
-    // P2002 = violation de contrainte unique (email déjà utilisé)
     const error =
       err.code === 'P2002'
         ? 'Cette adresse email est déjà utilisée.'

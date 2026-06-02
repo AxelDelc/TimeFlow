@@ -38,7 +38,7 @@ app.use('/employee', employeeRoutes);
 app.use('/admin', scheduleRoutes);
 
 app.get('/', (req, res) => {
-  res.render('home');
+  res.render('home', { user: req.session?.user ?? null });
 });
 
 module.exports = app;

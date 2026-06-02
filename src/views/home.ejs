@@ -17,9 +17,13 @@
         <div class="home-nav-logo">TF</div>
         <span class="home-nav-name">TimeFlow</span>
     </div>
-    <a href="/login" class="home-nav-cta">Se connecter</a>
+    <% if (user) { %>
+        <a href="/logout" class="home-nav-cta">Se déconnecter</a>
+    <% } else { %>
+        <a href="/login" class="home-nav-cta">Se connecter</a>
+    <% } %>
 </nav>
-
+    
 <section class="hero">
     <div class="hero-content">
         <h1 class="hero-title">
