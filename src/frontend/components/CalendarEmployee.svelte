@@ -80,7 +80,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        originalSlotId: selected.id,
+        originalSlotId: selected.idSlot,
         newDate: crDate,
         newStartTime: crStart,
         newEndTime: crEnd,

@@ -109,7 +109,7 @@
 
   async function deleteSlot() {
     if (!confirm('Supprimer ce créneau ?')) return;
-    const res = await fetch(`/admin/schedule/slot/${selected.id}`, { method: 'DELETE' });
+    const res = await fetch(`/admin/schedule/slot/${selected.idSlot}`, { method: 'DELETE' });
     if (res.ok) {
       modalSlot.close();
       location.reload();

@@ -58,7 +58,7 @@ router.get('/employees', requireAdmin, async (req, res) => {
   const employees = await prisma.user.findMany({
     where: { role: 'employee' },
     orderBy: { name: 'asc' },
-    select: { id: true, name: true, email: true, isActive: true },
+    select: { idUser: true, name: true, email: true, isActive: true },
   });
 
   res.render('admin/employees', { employees, user: req.session.user });
@@ -101,7 +101,7 @@ router.post('/employees/:id/disable', requireAdmin, async (req, res) => {
       data: { endTime: new Date() },
     }),
     prisma.user.update({
-      where: { id },
+      where: { idUser: id },
       data: { isActive: false },
     }),
   ]);
@@ -113,7 +113,7 @@ router.post('/employees/:id/disable', requireAdmin, async (req, res) => {
 router.post('/employees/:id/enable', requireAdmin, async (req, res) => {
   // update() : même principe, on repasse isActive à true
   await prisma.user.update({
-    where: { id: parseInt(req.params.id) },
+    where: { idUser: parseInt(req.params.id) },
     data: { isActive: true },
   });
   res.redirect('/admin/employees');
@@ -144,7 +144,7 @@ router.get('/schedule/:userId', requireAdmin, async (req, res) => {
   const userId = parseInt(req.params.userId);
   try {
     const employeeRole = await prisma.user.findFirst({
-      where: { id: userId, role: 'employee' },
+      where: { idUser: userId, role: 'employee' },
     });
     if (!employeeRole) return res.status(404).send('Employé introuvable');
 
@@ -208,11 +208,11 @@ router.get('/change-requests', requireAdmin, async (req, res) => {
 router.post('/change-requests/:id/approve', requireAdmin, async (req, res) => {
   const id = parseInt(req.params.id);
   const request = await prisma.scheduleChangeRequest.update({
-    where: { id },
+    where: { idRequest: id },
     data: { status: 'approved' },
   });
   await prisma.scheduleSlot.update({
-    where: { id: request.originalSlotId },
+    where: { idSlot: request.originalSlotId },
     data: { date: request.newDate, startTime: request.newStartTime, endTime: request.newEndTime },
   });
   res.redirect('/admin/change-requests');
@@ -220,7 +220,7 @@ router.post('/change-requests/:id/approve', requireAdmin, async (req, res) => {
 
 router.post('/change-requests/:id/reject', requireAdmin, async (req, res) => {
   await prisma.scheduleChangeRequest.update({
-    where: { id: parseInt(req.params.id) },
+    where: { idRequest: parseInt(req.params.id) },
     data: { status: 'rejected' },
   });
   res.redirect('/admin/change-requests');

@@ -114,7 +114,7 @@ router.put('/schedule/:userId/restrictions', requireAdmin, async (req, res) => {
 // Supprimer un créneau
 router.delete('/schedule/slot/:slotId', requireAdmin, async (req, res) => {
   const slotId = parseInt(req.params.slotId);
-  const slot = await prisma.scheduleSlot.findUnique({ where: { id: slotId } });
+  const slot = await prisma.scheduleSlot.findUnique({ where: { idSlot: slotId } });
 
   if (!slot) {
     return res.status(404).json({ error: 'Créneau non trouvé' });
@@ -122,7 +122,7 @@ router.delete('/schedule/slot/:slotId', requireAdmin, async (req, res) => {
   try {
     await prisma.$transaction([
       prisma.scheduleChangeRequest.deleteMany({ where: { originalSlotId: slotId } }),
-      prisma.scheduleSlot.delete({ where: { id: slotId } }),
+      prisma.scheduleSlot.delete({ where: { idSlot: slotId } }),
     ]);
     return res.json({ message: 'Créneau supprimé avec succès' });
   } catch (error) {
@@ -169,13 +169,13 @@ router.post('/schedule/:userId/overtime', requireAdmin, async (req, res) => {
 router.delete('/schedule/overtime/:overtimeId', requireAdmin, async (req, res) => {
   const overtimeId = parseInt(req.params.overtimeId);
   const overtimeEntry = await prisma.overtimeDeclaration.findUnique({
-    where: { id: overtimeId },
+    where: { idOvertime: overtimeId },
   });
   if (!overtimeEntry) {
     return res.status(404).json({ error: "Déclaration d'heure supplémentaire non trouvée" });
   }
   try {
-    await prisma.overtimeDeclaration.delete({ where: { id: overtimeId } });
+    await prisma.overtimeDeclaration.delete({ where: { idOvertime: overtimeId } });
     return res.json({ message: "Déclaration d'heure supplémentaire supprimée avec succès" });
   } catch (error) {
     console.error("Erreur lors de la suppression de la déclaration d'heure supplémentaire:", error);
@@ -201,16 +201,16 @@ router.put('/schedule/:requestId/change-requests', requireAdmin, async (req, res
   const { status, adminMessage } = req.body;
   try {
     const updatedRequest = await prisma.scheduleChangeRequest.update({
-      where: { id: requestId },
+      where: { idRequest: requestId },
       data: { status, adminMessage },
     });
     if (status === 'approved') {
       const originalSlot = await prisma.scheduleSlot.findUnique({
-        where: { id: updatedRequest.originalSlotId },
+        where: { idSlot: updatedRequest.originalSlotId },
       });
       if (originalSlot) {
         await prisma.scheduleSlot.update({
-          where: { id: updatedRequest.originalSlotId },
+          where: { idSlot: updatedRequest.originalSlotId },
           data: {
             date: updatedRequest.newDate,
             startTime: updatedRequest.newStartTime,

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -33,7 +30,7 @@ enum ChangeRequestStatus {
 }
 
 model User {
-  id                   Int                     @id @default(autoincrement())
+  idUser               Int                     @id @default(autoincrement()) @map("id")
   name                 String
   email                String                  @unique
   passwordHash         String                  @map("password_hash")
@@ -50,24 +47,24 @@ model User {
 }
 
 model WorkSession {
-  id        Int       @id @default(autoincrement())
+  idSession Int       @id @default(autoincrement()) @map("id")
   userId    Int       @map("user_id")
   startTime DateTime  @map("start_time")
   endTime   DateTime? @map("end_time")
   duration  Int?
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [idUser])
 
   @@map("work_sessions")
 }
 
 model ScheduleSlot {
-  id        Int      @id @default(autoincrement())
+  idSlot    Int      @id @default(autoincrement()) @map("id")
   userId    Int      @map("user_id")
   date      DateTime @db.Date
   startTime DateTime @map("start_time") @db.Time
   endTime   DateTime @map("end_time") @db.Time
   type      SlotType @default(work)
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [idUser])
 
   changeRequests ScheduleChangeRequest[]
 
@@ -75,32 +72,32 @@ model ScheduleSlot {
 }
 
 model EmployeeRestrictions {
-  id                  Int     @id @default(autoincrement())
+  idRestriction       Int     @id @default(autoincrement()) @map("id")
   userId              Int     @unique @map("user_id")
   weeklyHoursTarget   Float   @default(35) @map("weekly_hours_target")
   maxConsecutiveHours Float   @default(8) @map("break_frequency_hours")
   notes               String?
-  user                User    @relation(fields: [userId], references: [id])
+  user                User    @relation(fields: [userId], references: [idUser])
 
   @@map("employee_restrictions")
 }
 
 model OvertimeDeclaration {
-  id        Int            @id @default(autoincrement())
-  userId    Int            @map("user_id")
-  date      DateTime       @db.Date
-  startTime DateTime       @map("start_time") @db.Time
-  endTime   DateTime       @map("end_time") @db.Time
-  reason    OvertimeReason
-  comment   String?
-  createdAt DateTime       @default(now()) @map("created_at")
-  user      User           @relation(fields: [userId], references: [id])
+  idOvertime Int            @id @default(autoincrement()) @map("id")
+  userId     Int            @map("user_id")
+  date       DateTime       @db.Date
+  startTime  DateTime       @map("start_time") @db.Time
+  endTime    DateTime       @map("end_time") @db.Time
+  reason     OvertimeReason
+  comment    String?
+  createdAt  DateTime       @default(now()) @map("created_at")
+  user       User           @relation(fields: [userId], references: [idUser])
 
   @@map("overtime_declarations")
 }
 
 model ScheduleChangeRequest {
-  id              Int                 @id @default(autoincrement())
+  idRequest       Int                 @id @default(autoincrement()) @map("id")
   userId          Int                 @map("user_id")
   originalSlotId  Int                 @map("original_slot_id")
   newDate         DateTime            @map("new_date") @db.Date
@@ -110,8 +107,8 @@ model ScheduleChangeRequest {
   employeeMessage String?             @map("employee_message")
   adminMessage    String?             @map("admin_message")
   createdAt       DateTime            @default(now()) @map("created_at")
-  user            User                @relation(fields: [userId], references: [id])
-  originalSlot    ScheduleSlot        @relation(fields: [originalSlotId], references: [id])
+  user            User                @relation(fields: [userId], references: [idUser])
+  originalSlot    ScheduleSlot        @relation(fields: [originalSlotId], references: [idSlot])
 
   @@map("schedule_change_requests")
 }

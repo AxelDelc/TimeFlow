@@ -37,21 +37,21 @@
                         <td class="text-muted"><%= emp.email %></td>
                         <td>
                             <div class="actions-cell">
-                                <a href="/admin/sessions#employee-<%= emp.id %>" class="btn btn-ghost btn-sm">
+                                <a href="/admin/sessions#employee-<%= emp.idUser %>" class="btn btn-ghost btn-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                                     Pointages
                                 </a>
-                                <a href="/admin/schedule/<%= emp.id %>" class="btn btn-ghost btn-sm">
+                                <a href="/admin/schedule/<%= emp.idUser %>" class="btn btn-ghost btn-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                                     Planning
                                 </a>
                                 <span class="actions-sep"></span>
                                 <% if (emp.isActive) { %>
-                                    <form method="POST" action="/admin/employees/<%= emp.id %>/disable">
+                                    <form method="POST" action="/admin/employees/<%= emp.idUser %>/disable">
                                         <button class="btn btn-danger btn-sm">Désactiver</button>
                                     </form>
                                 <% } else { %>
-                                    <form method="POST" action="/admin/employees/<%= emp.id %>/enable">
+                                    <form method="POST" action="/admin/employees/<%= emp.idUser %>/enable">
                                         <button class="btn btn-success btn-sm">Réactiver</button>
                                     </form>
                                 <% } %>
