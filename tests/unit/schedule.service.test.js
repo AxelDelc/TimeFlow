@@ -107,7 +107,7 @@ describe('validateWeeklyHours', () => {
   it("utilise 35h par défaut si aucune restriction n'est définie", async () => {
     mockPrisma.employeeRestrictions.findUnique.mockResolvedValue(null);
     mockPrisma.scheduleSlot.findMany.mockResolvedValue([]);
-    // 0h + 34h = 34h < 35h (défaut)
+    // 0h + 34h = 34h < 35h
     expect(await validateWeeklyHours(userId, weekStart, weekEnd, 34, mockPrisma)).toBeNull();
   });
 
