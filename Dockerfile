@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY package*.json prisma.config.ts ./
 COPY prisma ./prisma
-RUN npm ci
+RUN npm install
 
 # ---- Étape 2 : image finale de production ----
 FROM node:20-alpine
