@@ -5,6 +5,8 @@ const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
 const employeeRoutes = require('./routes/employee.routes');
 const scheduleRoutes = require('./routes/schedule.routes');
+const setupRoutes = require('./routes/setup.routes');
+const { requireSetupComplete } = require('./middlewares/auth.middleware');
 
 const app = express();
 
@@ -24,6 +26,12 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+// Garde : redirige vers /setup si aucun admin n'existe
+app.use(requireSetupComplete);
+
+// Routes setup
+app.use(setupRoutes);
 
 // Route auth
 app.use(authRoutes);
