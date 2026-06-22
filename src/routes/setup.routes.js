@@ -21,7 +21,9 @@ router.post('/setup', async (req, res) => {
   }
 
   if (password.length < 8) {
-    return res.render('auth/setup', { error: 'Le mot de passe doit contenir au moins 8 caractères.' });
+    return res.render('auth/setup', {
+      error: 'Le mot de passe doit contenir au moins 8 caractères.',
+    });
   }
 
   try {
