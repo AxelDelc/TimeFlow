@@ -1,9 +1,8 @@
 import test, { expect, Page } from '@playwright/test';
 
 test.describe('Admin Page', () => {
-  // Tests pour la page d'administration
   test.beforeEach(async ({ page }) => {
-    // Se connecte en tant qu'administrateur avant chaque test
+    // Se connecte en tant qu'admin
     await page.goto('http://localhost:3000/');
     await page.getByRole('link', { name: 'Se connecter' }).click();
     await page.getByRole('textbox', { name: 'Adresse email' }).fill('test-admin@test.dev');
