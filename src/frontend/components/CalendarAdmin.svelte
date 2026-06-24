@@ -172,11 +172,14 @@
     </a>
   </div>
 
-  <div style="padding:8px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--color-border)">
+  <div
+    style="padding:8px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--color-border)"
+  >
     <button onclick={copyPrevWeek} class="btn btn-ghost btn-sm" disabled={copyLoading}>
       {copyLoading ? 'Copie en cours...' : 'Copier la semaine précédente'}
     </button>
-    {#if copyErr}<span class="alert alert-error" style="padding:4px 10px;margin:0">{copyErr}</span>{/if}
+    {#if copyErr}<span class="alert alert-error" style="padding:4px 10px;margin:0">{copyErr}</span
+      >{/if}
   </div>
 
   <div class="sc-calendar">

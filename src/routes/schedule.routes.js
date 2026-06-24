@@ -112,7 +112,11 @@ router.post('/schedule/:userId/copy-week', requireAdmin, async (req, res) => {
   const userId = parseInt(req.params.userId);
   const { targetWeekStart } = req.body;
 
-  const sourceStart = moment.tz(targetWeekStart, TZ).startOf('isoWeek').subtract(7, 'days').toDate();
+  const sourceStart = moment
+    .tz(targetWeekStart, TZ)
+    .startOf('isoWeek')
+    .subtract(7, 'days')
+    .toDate();
   const sourceEnd = moment.tz(targetWeekStart, TZ).endOf('isoWeek').subtract(7, 'days').toDate();
   const targetStart = moment.tz(targetWeekStart, TZ).startOf('isoWeek').toDate();
   const targetEnd = moment.tz(targetWeekStart, TZ).endOf('isoWeek').toDate();

@@ -55,7 +55,11 @@ router.get('/schedule', requireAuth, async (req, res) => {
     where: { userId, date: { gte: weekStart, lte: weekEnd } },
     orderBy: { date: 'asc' },
   });
-  res.render('employee/schedule', { timeSchedule, weekStart: weekStartStr, user: req.session.user });
+  res.render('employee/schedule', {
+    timeSchedule,
+    weekStart: weekStartStr,
+    user: req.session.user,
+  });
 });
 
 // Déclarer ses heures supplémentaires
