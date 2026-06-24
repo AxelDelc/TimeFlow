@@ -6,18 +6,17 @@ const {
   validateWeeklyHours,
 } = require('../services/schedule.service');
 const prisma = require('../db/prisma');
+const moment = require('moment-timezone');
+moment.locale('fr');
+const TZ = 'Europe/Paris';
 
 const router = express.Router();
 
 // Récupérer les créneaux d'une semaine pour un employé
 router.get('/schedule/:userId/week', requireAdmin, async (req, res) => {
   const userId = parseInt(req.params.userId);
-  const weekStart = new Date(req.query.weekStart);
-  weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
-  weekStart.setHours(0, 0, 0, 0);
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekStart.getDate() + 6);
-  weekEnd.setHours(23, 59, 59, 999);
+  const weekStart = moment.tz(req.query.weekStart, TZ).startOf('isoWeek').toDate();
+  const weekEnd = moment.tz(req.query.weekStart, TZ).endOf('isoWeek').toDate();
 
   const slots = await prisma.scheduleSlot.findMany({
     where: {
@@ -34,11 +33,8 @@ router.post('/schedule/:userId/slot', requireAdmin, async (req, res) => {
   const userId = parseInt(req.params.userId);
   const { date, startTime, endTime, type } = req.body;
 
-  const [y, m, d] = date.split('-').map(Number);
-  const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
-  const mondayOffset = dow === 0 ? -6 : 1 - dow;
-  const weekStart = new Date(Date.UTC(y, m - 1, d + mondayOffset));
-  const weekEnd = new Date(Date.UTC(y, m - 1, d + mondayOffset + 6, 23, 59, 59, 999));
+  const weekStart = moment.tz(date, TZ).startOf('isoWeek').toDate();
+  const weekEnd = moment.tz(date, TZ).endOf('isoWeek').toDate();
 
   const startDate = new Date(`${date}T${startTime}:00Z`);
   const endDate = new Date(`${date}T${endTime}:00Z`);
@@ -109,6 +105,46 @@ router.put('/schedule/:userId/restrictions', requireAdmin, async (req, res) => {
       .status(500)
       .json({ error: "Erreur lors de la mise à jour des restrictions de l'employé" });
   }
+});
+
+// Copier les créneaux de la semaine précédente vers la semaine cible
+router.post('/schedule/:userId/copy-week', requireAdmin, async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const { targetWeekStart } = req.body;
+
+  const sourceStart = moment.tz(targetWeekStart, TZ).startOf('isoWeek').subtract(7, 'days').toDate();
+  const sourceEnd = moment.tz(targetWeekStart, TZ).endOf('isoWeek').subtract(7, 'days').toDate();
+  const targetStart = moment.tz(targetWeekStart, TZ).startOf('isoWeek').toDate();
+  const targetEnd = moment.tz(targetWeekStart, TZ).endOf('isoWeek').toDate();
+
+  const sourceSlots = await prisma.scheduleSlot.findMany({
+    where: { userId, date: { gte: sourceStart, lte: sourceEnd } },
+  });
+
+  if (sourceSlots.length === 0) {
+    return res.status(400).json({ error: 'Aucun créneau trouvé la semaine précédente.' });
+  }
+
+  const existingCount = await prisma.scheduleSlot.count({
+    where: { userId, date: { gte: targetStart, lte: targetEnd } },
+  });
+
+  if (existingCount > 0) {
+    return res.status(409).json({ error: 'La semaine cible a déjà des créneaux.' });
+  }
+
+  const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+  await prisma.scheduleSlot.createMany({
+    data: sourceSlots.map((s) => ({
+      userId,
+      date: new Date(s.date.getTime() + WEEK_MS),
+      startTime: new Date(s.startTime.getTime() + WEEK_MS),
+      endTime: new Date(s.endTime.getTime() + WEEK_MS),
+      type: s.type,
+    })),
+  });
+
+  return res.json({ copied: sourceSlots.length });
 });
 
 // Supprimer un créneau

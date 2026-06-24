@@ -2,8 +2,9 @@ const express = require('express');
 const { requireAuth } = require('../middlewares/auth.middleware');
 const WorkSession = require('../models/workSession.model');
 const prisma = require('../db/prisma');
-const moment = require('moment');
+const moment = require('moment-timezone');
 moment.locale('fr');
+const TZ = 'Europe/Paris';
 
 const router = express.Router();
 
@@ -13,8 +14,8 @@ router.get('/', requireAuth, async (req, res) => {
 
   const sessions = rawSessions.map((s) => ({
     ...s,
-    startTimeFormatted: moment(s.startTime).format('HH[h]mm'),
-    endTimeFormatted: s.endTime ? moment(s.endTime).format('HH[h]mm') : null,
+    startTimeFormatted: moment(s.startTime).tz(TZ).format('HH[h]mm'),
+    endTimeFormatted: s.endTime ? moment(s.endTime).tz(TZ).format('HH[h]mm') : null,
   }));
 
   const today = new Date();
@@ -44,18 +45,17 @@ router.post('/end', requireAuth, async (req, res) => {
 router.get('/schedule', requireAuth, async (req, res) => {
   const userId = req.session.user.id;
 
-  const dateStr = req.query.weekStart || new Date().toISOString().split('T')[0];
-  const [y, m, d] = dateStr.split('-').map(Number);
-  const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
-  const mondayOffset = dow === 0 ? -6 : 1 - dow;
-  const weekStart = new Date(Date.UTC(y, m - 1, d + mondayOffset));
-  const weekEnd = new Date(Date.UTC(y, m - 1, d + mondayOffset + 6, 23, 59, 59, 999));
+  const dateStr = req.query.weekStart || moment.tz(TZ).format('YYYY-MM-DD');
+  const weekStartMoment = moment.tz(dateStr, TZ).startOf('isoWeek');
+  const weekStart = weekStartMoment.toDate();
+  const weekEnd = moment.tz(dateStr, TZ).endOf('isoWeek').toDate();
+  const weekStartStr = weekStartMoment.format('YYYY-MM-DD');
 
   const timeSchedule = await prisma.scheduleSlot.findMany({
     where: { userId, date: { gte: weekStart, lte: weekEnd } },
     orderBy: { date: 'asc' },
   });
-  res.render('employee/schedule', { timeSchedule, weekStart, user: req.session.user });
+  res.render('employee/schedule', { timeSchedule, weekStart: weekStartStr, user: req.session.user });
 });
 
 // Déclarer ses heures supplémentaires

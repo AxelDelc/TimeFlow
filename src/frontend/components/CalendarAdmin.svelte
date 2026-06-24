@@ -116,6 +116,25 @@
     } else alert('Erreur lors de la suppression');
   }
 
+  let copyLoading = $state(false);
+  let copyErr = $state('');
+
+  async function copyPrevWeek() {
+    copyLoading = true;
+    copyErr = '';
+    const res = await fetch(`/admin/schedule/${employeeId}/copy-week`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ targetWeekStart: weekStartStr }),
+    });
+    if (res.ok) {
+      location.reload();
+    } else {
+      copyErr = (await res.json()).error || 'Erreur lors de la copie';
+      copyLoading = false;
+    }
+  }
+
   async function saveRestrictions(e) {
     e.preventDefault();
     const res = await fetch(`/admin/schedule/${employeeId}/restrictions`, {
@@ -151,6 +170,13 @@
         stroke-width="2"><polyline points="9 18 15 12 9 6" /></svg
       >
     </a>
+  </div>
+
+  <div style="padding:8px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--color-border)">
+    <button onclick={copyPrevWeek} class="btn btn-ghost btn-sm" disabled={copyLoading}>
+      {copyLoading ? 'Copie en cours...' : 'Copier la semaine précédente'}
+    </button>
+    {#if copyErr}<span class="alert alert-error" style="padding:4px 10px;margin:0">{copyErr}</span>{/if}
   </div>
 
   <div class="sc-calendar">

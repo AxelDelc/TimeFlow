@@ -51,14 +51,14 @@ describe('startSession', () => {
 
 describe('endSession', () => {
   it('met à jour la session active avec une endTime', async () => {
-    const activeSession = { id: 5, userId: 42, startTime: new Date(), endTime: null };
+    const activeSession = { idSession: 5, userId: 42, startTime: new Date(), endTime: null };
     mockPrisma.workSession.findFirst.mockResolvedValue(activeSession);
     mockPrisma.workSession.update.mockResolvedValue({ ...activeSession, endTime: new Date() });
 
     const result = await endSession(42, mockPrisma);
 
     expect(mockPrisma.workSession.update).toHaveBeenCalledWith({
-      where: { id: 5 },
+      where: { idSession: 5 },
       data: expect.objectContaining({ endTime: expect.any(Date) }),
     });
     expect(result.endTime).toBeInstanceOf(Date);
