@@ -13,7 +13,7 @@ async function seedTest() {
       role: 'admin',
     },
   });
-  console.log('Compte test créé : test-admin@test.dev / test123');
+  console.log('Compte admin de test créé');
   await prisma.$disconnect();
 
   // Compte employé de test
@@ -27,7 +27,7 @@ async function seedTest() {
       role: 'employee',
     },
   });
-  console.log('Compte test créé : test-employee@test.dev / test123');
+  console.log('Compte employé de test créé');
   await prisma.$disconnect();
 }
 

@@ -26,7 +26,7 @@ async function endSession(userId, prisma = defaultPrisma) {
   if (!session) return null;
 
   return prisma.workSession.update({
-    where: { id: session.id },
+    where: { idSession: session.idSession },
     data: { endTime: new Date() },
   });
 }

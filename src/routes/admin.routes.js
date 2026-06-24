@@ -37,8 +37,16 @@ router.get('/', requireAdmin, async (req, res) => {
 
   const fmt = (d) => (d ? moment(d).format('DD/MM à HH[h]mm') : null);
 
+  const adminDate = new Date().toLocaleDateString('fr-FR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
   res.render('admin/dashboard', {
     user: req.session.user,
+    employeeDate: adminDate,
     stats: { totalEmployees, activeEmployees, sessionsToday, currentlyIn },
     recentSessions: recentSessions.map((s) => ({
       ...s,
