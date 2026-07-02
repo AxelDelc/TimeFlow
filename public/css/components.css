@@ -6,6 +6,12 @@
   align-items: start;
 }
 
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .stats-bar {
   display: flex;
   border: 1px solid var(--color-border);
