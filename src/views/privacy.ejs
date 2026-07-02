@@ -1,0 +1,89 @@
+<%- include('./layout/header', { pageTitle: 'Confidentialité des données', currentPage: 'privacy', user: user }) %>
+
+<div class="card card--mb">
+    <div class="card-header">
+        <span class="card-title">Politique de confidentialité</span>
+        <span class="badge badge-blue">RGPD · CNIL</span>
+    </div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:28px;line-height:1.7">
+
+        <section>
+            <h2 style="font-size:var(--text-body);font-weight:600;margin-bottom:8px">Responsable du traitement</h2>
+            <p class="text-muted">
+                Le responsable du traitement des données collectées via TimeFlow est l'entreprise utilisant cette application.
+                Pour toute question relative à vos données personnelles, vous pouvez contacter le service des ressources humaines
+                ou le délégué à la protection des données (DPO) de votre organisation.
+            </p>
+        </section>
+
+        <section>
+            <h2 style="font-size:var(--text-body);font-weight:600;margin-bottom:8px">Données collectées</h2>
+            <p class="text-muted">Dans le cadre de l'utilisation de TimeFlow, les données suivantes sont collectées et traitées :</p>
+            <ul class="text-muted" style="margin-top:8px;padding-left:20px;display:flex;flex-direction:column;gap:4px">
+                <li>Données d'identification : nom complet, adresse email</li>
+                <li>Données de connexion : mot de passe haché, rôle, statut du compte</li>
+                <li>Données de temps de travail : heures d'entrée et de sortie, durée des sessions</li>
+                <li>Données de planning : créneaux horaires, type de créneau (travail ou pause)</li>
+                <li>Déclarations d'heures supplémentaires : dates, horaires, motifs</li>
+                <li>Demandes de modification de planning : créneaux concernés, messages échangés</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 style="font-size:var(--text-body);font-weight:600;margin-bottom:8px">Finalité et base légale</h2>
+            <p class="text-muted">
+                Ces données sont collectées exclusivement pour assurer le suivi du temps de travail des salariés.
+                Le traitement repose sur une obligation légale au sens de l'article 6.1.c du RGPD :
+                l'article L3171-2 du Code du travail impose à l'employeur de décompter la durée du travail de chaque salarié.
+                Aucune donnée n'est utilisée à des fins commerciales, publicitaires ou de profilage.
+            </p>
+        </section>
+
+        <section>
+            <h2 style="font-size:var(--text-body);font-weight:600;margin-bottom:8px">Durée de conservation</h2>
+            <p class="text-muted">
+                Conformément à l'article L3171-3 du Code du travail, les enregistrements de temps de travail sont conservés
+                pendant une durée minimale d'un an. Les données relatives à la paie associées peuvent être conservées jusqu'à
+                cinq ans. Au-delà de ces durées, les données sont supprimées ou anonymisées.
+            </p>
+        </section>
+
+        <section>
+            <h2 style="font-size:var(--text-body);font-weight:600;margin-bottom:8px">Sécurité des données</h2>
+            <p class="text-muted">
+                Des mesures techniques et organisationnelles sont mises en place pour protéger vos données contre tout accès
+                non autorisé, perte ou divulgation. Les mots de passe sont stockés sous forme de hachage cryptographique
+                (bcrypt). Les accès à l'application sont protégés par un système d'authentification par session et un contrôle
+                des rôles. Les communications sont chiffrées via HTTPS en environnement de production.
+            </p>
+        </section>
+
+        <section>
+            <h2 style="font-size:var(--text-body);font-weight:600;margin-bottom:8px">Vos droits</h2>
+            <p class="text-muted">Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants :</p>
+            <ul class="text-muted" style="margin-top:8px;padding-left:20px;display:flex;flex-direction:column;gap:4px">
+                <li><strong style="color:var(--prim-n-900)">Droit d'accès</strong> (art. 15) — obtenir une copie des données vous concernant</li>
+                <li><strong style="color:var(--prim-n-900)">Droit de rectification</strong> (art. 16) — faire corriger des données inexactes</li>
+                <li><strong style="color:var(--prim-n-900)">Droit à l'effacement</strong> (art. 17) — demander la suppression de vos données, dans les limites des obligations légales de conservation</li>
+                <li><strong style="color:var(--prim-n-900)">Droit à la portabilité</strong> (art. 20) — recevoir vos données dans un format structuré et lisible</li>
+                <li><strong style="color:var(--prim-n-900)">Droit d'opposition</strong> (art. 21) — vous opposer à certains traitements dans les conditions prévues par la loi</li>
+            </ul>
+            <p class="text-muted" style="margin-top:12px">
+                Pour exercer ces droits, adressez votre demande au responsable du traitement de votre organisation.
+                Vous disposez également du droit d'introduire une réclamation auprès de la
+                <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" style="color:var(--color-signal-on-dark)">Commission Nationale de l'Informatique et des Libertés (CNIL)</a>.
+            </p>
+        </section>
+
+        <section>
+            <h2 style="font-size:var(--text-body);font-weight:600;margin-bottom:8px">Mise à jour</h2>
+            <p class="text-muted">
+                Cette politique de confidentialité peut être mise à jour afin de refléter les évolutions légales ou les
+                changements apportés à l'application. La date de dernière mise à jour sera indiquée en cas de modification significative.
+            </p>
+        </section>
+
+    </div>
+</div>
+
+<%- include('./layout/footer') %>

@@ -6,7 +6,7 @@ const adminRoutes = require('./routes/admin.routes');
 const employeeRoutes = require('./routes/employee.routes');
 const scheduleRoutes = require('./routes/schedule.routes');
 const setupRoutes = require('./routes/setup.routes');
-const { requireSetupComplete } = require('./middlewares/auth.middleware');
+const { requireSetupComplete, requireAuth } = require('./middlewares/auth.middleware');
 
 const app = express();
 
@@ -47,6 +47,10 @@ app.use('/admin', scheduleRoutes);
 
 app.get('/', (req, res) => {
   res.render('home', { user: req.session?.user ?? null });
+});
+
+app.get('/privacy', requireAuth, (req, res) => {
+  res.render('privacy', { user: req.session.user, pageTitle: 'Confidentialité', currentPage: 'privacy' });
 });
 
 module.exports = app;
