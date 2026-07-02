@@ -36,8 +36,8 @@ router.post('/schedule/:userId/slot', requireAdmin, async (req, res) => {
   const weekStart = moment.tz(date, TZ).startOf('isoWeek').toDate();
   const weekEnd = moment.tz(date, TZ).endOf('isoWeek').toDate();
 
-  const startDate = new Date(`${date}T${startTime}:00Z`);
-  const endDate = new Date(`${date}T${endTime}:00Z`);
+  const startDate = moment.utc(`${date}T${startTime}`).toDate();
+  const endDate = moment.utc(`${date}T${endTime}`).toDate();
   const newSlotInHours = (endDate - startDate) / 1000 / 60 / 60;
 
   const slotError = validateSlotHours(startDate, endDate);
@@ -189,9 +189,9 @@ router.post('/schedule/:userId/overtime', requireAdmin, async (req, res) => {
     const overtimeEntry = await prisma.overtimeDeclaration.create({
       data: {
         userId,
-        date: new Date(date),
-        startTime: new Date(`${date}T${startTime}`),
-        endTime: new Date(`${date}T${endTime}`),
+        date: moment.utc(date).toDate(),
+        startTime: moment.utc(`${date}T${startTime}`).toDate(),
+        endTime: moment.utc(`${date}T${endTime}`).toDate(),
         reason,
         comment,
       },
