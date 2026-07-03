@@ -80,6 +80,11 @@ router.get('/employees/new', requireAdmin, (_req, res) => {
 // Création salarié
 router.post('/employees/new', requireAdmin, async (req, res) => {
   const { name, email, password } = req.body;
+
+  if (!password || password.length < 12) {
+    return res.status(400).send('Le mot de passe doit contenir au moins 12 caractères.');
+  }
+
   const hash = await bcrypt.hash(password, 10);
 
   try {

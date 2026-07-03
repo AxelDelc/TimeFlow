@@ -20,9 +20,9 @@ router.post('/setup', async (req, res) => {
     return res.render('auth/setup', { error: 'Tous les champs sont obligatoires.' });
   }
 
-  if (password.length < 8) {
+  if (password.length < 12) {
     return res.render('auth/setup', {
-      error: 'Le mot de passe doit contenir au moins 8 caractères.',
+      error: 'Le mot de passe doit contenir au moins 12 caractères.',
     });
   }
 
